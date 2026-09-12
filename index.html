@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Learn real English slang with short English explanations, Kazakh meanings, examples, and a built-in slang helper." />
+<meta name="theme-color" content="#f6f8ff" />
+<meta property="og:title" content="Slangify — Understand slang. Speak naturally." />
+<meta property="og:description" content="Explore conversational English slang with clear English and Kazakh explanations." />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%23536fe9'/%3E%3Cpath d='M18 21h28M18 32h20M18 43h15' stroke='white' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E" />
+<title>Slangify — Understand slang. Speak naturally.</title>
+<style>
+  :root{
+    --bg:#020916;
+    --bg2:#061329;
+    --panel:rgba(7,22,45,.88);
+    --panel2:rgba(8,28,58,.76);
+    --border:rgba(84,127,255,.28);
+    --text:#f5f7ff;
+    --muted:#9daed0;
+    --blue:#4d7cff;
+    --blue2:#6b8cff;
+    --purple:#9b5cff;
+    --cyan:#45d8ff;
+    --green:#39e0ac;
+    --red:#ff667f;
+    --shadow:0 0 60px rgba(55,95,255,.13);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; color:var(--text); background:
+      radial-gradient(circle at 85% 12%, rgba(89,63,255,.14), transparent 26%),
+      radial-gradient(circle at 18% 30%, rgba(0,163,255,.08), transparent 24%),
+      linear-gradient(180deg,#020916 0%,#030b19 100%);
+    font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    min-height:100vh;
+  }
+  a{text-decoration:none;color:inherit}
+  button,input,textarea{font:inherit}
+  .topbar{
+    height:67px; border-bottom:1px solid rgba(110,145,220,.14);
+    display:flex;align-items:center;padding:0 4vw;gap:28px;
+    backdrop-filter:blur(12px);position:sticky;top:0;z-index:20;background:rgba(2,9,22,.72)
+  }
+  .brand{display:flex;align-items:center;gap:11px;font-size:24px;font-weight:800;letter-spacing:-.5px;min-width:188px}
+  .brand-mark{width:31px;height:31px;border-radius:10px;background:linear-gradient(135deg,#4d7cff,#895cff);display:grid;place-items:center;box-shadow:0 0 25px rgba(77,124,255,.46)}
+  .brand-mark::before{content:"";width:13px;height:13px;border:3px solid white;border-radius:50%;box-shadow:6px 9px 0 -5px white}
+  .tagline{color:#9fb1d8;font-size:13px;white-space:nowrap}
+  nav{display:flex;gap:34px;margin:auto;font-size:14px;color:#b8c5e1}
+  nav a{padding:22px 0;position:relative} nav a.active{color:#fff} nav a.active::after{content:"";position:absolute;left:0;right:0;bottom:9px;height:2px;background:#647dff;border-radius:2px;box-shadow:0 0 10px #647dff}
+  .top-actions{display:flex;align-items:center;gap:15px}
+  .moon{width:36px;height:36px;border:0;border-radius:50%;background:transparent;color:#b5c2df;font-size:20px;cursor:pointer}
+  .signin{padding:10px 17px;border:1px solid #536ff0;border-radius:12px;background:rgba(28,45,95,.25);color:#fff;cursor:pointer}
+
+  .wrap{width:min(1440px,92vw);margin:0 auto}
+  .hero{padding:54px 0 42px;display:grid;grid-template-columns:1fr 1.07fr;gap:62px;align-items:center;position:relative}
+  .hero::before{content:"";position:absolute;inset:10px -5vw auto;height:320px;background:radial-gradient(circle at 60% 50%,rgba(60,96,255,.14),transparent 48%);pointer-events:none}
+  h1{font-size:clamp(48px,5vw,70px);line-height:.98;margin:0 0 24px;letter-spacing:-3.7px;max-width:600px}
+  h1 .blue{color:#5e88ff}.grad{background:linear-gradient(90deg,#638aff,#bd67ff);color:transparent;background-clip:text;-webkit-background-clip:text}
+  .hero-copy{color:#aab7d2;font-size:17px;line-height:1.7;max-width:545px;margin:0 0 30px}
+  .features{display:flex;gap:26px;flex-wrap:wrap}.feature{display:flex;gap:10px;align-items:flex-start;font-size:12px;color:#c3cde1;max-width:150px}.feature .i{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:rgba(50,76,146,.22);border:1px solid rgba(90,120,220,.2);color:#71a2ff;font-size:16px}
+
+  .helper-card{border:1px solid var(--border);background:linear-gradient(145deg,rgba(10,30,62,.92),rgba(4,16,35,.8));padding:25px;border-radius:20px;box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.035);position:relative;overflow:hidden}
+  .helper-card::after{content:"";position:absolute;width:220px;height:220px;border-radius:50%;right:-90px;top:-100px;background:rgba(73,84,255,.18);filter:blur(30px)}
+  .helper-header{display:flex;align-items:center;gap:14px;font-weight:650;font-size:17px;position:relative;z-index:1}.bot{width:37px;height:37px;border-radius:11px;background:linear-gradient(135deg,#3a72ff,#8a5dff);display:grid;place-items:center;font-size:18px}
+  .chat-area{margin-top:18px;position:relative;z-index:1}
+  .composer{border:1px solid #3f64bb;border-radius:16px;background:rgba(2,13,31,.66);padding:11px 13px 10px;display:flex;align-items:flex-end;gap:10px;transition:border .2s,box-shadow .2s}
+  .composer:focus-within{border-color:#6c86ff;box-shadow:0 0 0 3px rgba(108,134,255,.1)}
+  #prompt{resize:none;outline:0;background:transparent;color:#f6f7ff;border:0;min-height:45px;max-height:230px;line-height:1.45;width:100%;padding:7px 8px;overflow-y:auto}
+  #prompt::placeholder{color:#7890be}
+  .send{flex:0 0 auto;width:44px;height:44px;border:0;border-radius:13px;color:white;background:linear-gradient(135deg,#3e69ff,#895eff);cursor:pointer;box-shadow:0 8px 22px rgba(71,94,255,.33);font-size:18px}
+  .chips{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}.chip{border:1px solid rgba(91,118,189,.4);background:rgba(12,34,68,.58);color:#b8c9ec;border-radius:30px;padding:8px 13px;font-size:12px;cursor:pointer}.chip:hover{border-color:#6082de;color:#e8edff}
+  .chat-response{margin-top:14px;display:none}.chat-response.show{display:block}.message{display:flex;gap:10px}.avatar{width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#3c71ff,#8c61ff);display:grid;place-items:center;font-size:14px;flex:0 0 32px}.bubble{background:rgba(12,28,55,.85);border:1px solid rgba(78,107,171,.38);border-radius:14px 14px 14px 4px;padding:13px 15px;color:#d8e0f1;font-size:13px;line-height:1.6;flex:1}.bubble strong{color:#fff}.bubble .lang{margin-top:7px;color:#dce5f7}.bubble .lang span{display:inline-block;font-size:9px;font-weight:800;color:#6f91ff;width:25px}.bubble .example-answer{margin-top:9px;color:#9fb2d8;font-style:italic}.bubble .label{color:#6fdfff;font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+
+  .main{border-top:1px solid rgba(104,128,185,.12);padding:50px 0 60px;display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:24px}
+  .section-top{display:flex;justify-content:space-between;align-items:end;margin-bottom:21px}.section-title{font-size:29px;font-weight:800;letter-spacing:-1.1px}.section-title small{font-size:29px}.section-sub{color:#93a5ca;margin-top:8px;font-size:13px}.viewall{color:#6d8fff;font-size:13px}
+  .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}.card{border:1px solid rgba(70,104,168,.28);border-radius:14px;background:linear-gradient(180deg,rgba(9,26,53,.7),rgba(4,16,35,.76));padding:17px;min-height:174px;transition:transform .18s,border-color .18s}.card:hover{transform:translateY(-3px);border-color:#4d6ecc}.word{display:inline-flex;align-items:center;border-radius:18px;padding:6px 13px;color:#fff;font-weight:800;font-size:15px;margin-bottom:14px;background:linear-gradient(90deg,#5e49ff,#a05cff)}.card:nth-child(2) .word,.card:nth-child(6) .word{background:linear-gradient(90deg,#237cf1,#46a8ff)}.card:nth-child(4) .word{background:linear-gradient(90deg,#a95a12,#d47a23)}.card:nth-child(5) .word{background:linear-gradient(90deg,#14a9ac,#26c9c2)}.card:nth-child(7) .word{background:linear-gradient(90deg,#208ec8,#35bff3)}
+  .meaning{font-weight:600;font-size:13px;line-height:1.5;color:#ebeff8}.example{font-size:12px;line-height:1.45;color:#9aaed0;font-style:italic;margin-top:9px}.pill{display:inline-block;margin-top:13px;padding:5px 10px;border-radius:20px;font-size:10px;font-weight:700;background:rgba(45,91,220,.2);color:#5fc1ff}
+  .side-title{font-size:18px;font-weight:750;margin-bottom:15px}.categories{display:grid;gap:8px}.cat{width:100%;text-align:left;color:inherit;font:inherit;cursor:pointer;display:flex;align-items:center;gap:12px;padding:11px 12px;border:1px solid rgba(78,106,170,.2);border-radius:13px;background:rgba(7,23,49,.65)}.cat:hover,.cat.active{border-color:#506fc5;background:rgba(12,31,64,.9);transform:translateX(2px)}.cat-icon{width:35px;height:35px;border-radius:50%;display:grid;place-items:center;background:rgba(41,95,200,.23);color:#67bdff}.cat b{font-size:12px}.cat span{display:block;color:#7f94b9;font-size:10px;margin-top:2px}.arrow{margin-left:auto;color:#6a80ac}
+  .try{margin-top:15px;border-radius:15px;padding:15px;background:linear-gradient(135deg,rgba(29,73,185,.9),rgba(80,48,185,.85));border:1px solid rgba(134,132,255,.4);display:flex;align-items:center;gap:12px}.try .big{width:42px;height:42px;border-radius:13px;background:rgba(255,255,255,.11);display:grid;place-items:center;font-size:19px}.try b{font-size:14px}.try p{margin:3px 0 0;color:#d2d9ef;font-size:10px;line-height:1.4}
+  .tips{grid-column:1 / -1;margin-top:3px}.tips h3{font-size:18px;margin:0 0 11px}.tips-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}.tip{border:1px solid rgba(70,104,168,.22);background:rgba(7,23,48,.55);padding:13px 15px;border-radius:12px;color:#9eb1d4;font-size:11px;line-height:1.5}.tip b{color:#e8edf8;display:block;margin-bottom:4px}
+  .footer{border-top:1px solid rgba(100,125,180,.11);padding:26px 0 38px;color:#697fa8;font-size:11px;text-align:center}
+  @media (max-width:1100px){nav{gap:17px}.hero{grid-template-columns:1fr}.cards{grid-template-columns:repeat(2,1fr)}.main{grid-template-columns:1fr}.side{order:2}}
+  @media (max-width:680px){.topbar{padding:0 18px}.tagline,nav,.signin{display:none}.brand{min-width:0}.top-actions{margin-left:auto}.wrap{width:min(94vw,600px)}.hero{padding-top:35px;gap:32px}.features{gap:13px}.cards,.tips-grid{grid-template-columns:1fr}.section-title{font-size:24px}.section-title small{font-size:24px}.helper-card{padding:17px}.main{padding-top:38px}}
+
+  /* Clear, high-contrast reading theme */
+  :root{--text:#17233d;--muted:#68758e;--border:#dfe6f5;--shadow:0 20px 60px rgba(64,83,136,.12)}
+  body{color:var(--text);background:radial-gradient(circle at 88% 10%,rgba(146,111,255,.16),transparent 27%),radial-gradient(circle at 12% 24%,rgba(67,174,255,.12),transparent 24%),linear-gradient(180deg,#f6f8ff 0%,#fbfcff 100%)}
+  .topbar{background:rgba(255,255,255,.84);border-color:#e1e7f2}.tagline{color:#72809d}nav{color:#67748f}nav a.active{color:#2f4fc4;font-weight:700}.moon{border:1px solid #dce3f3;background:#fff;color:#52617f}.signin{background:#536fe9;color:#fff}
+  .hero-copy{color:#63708a}.feature{color:#44516c}.feature .i{background:#eaf0ff;border-color:#d9e3ff;color:#4f72ed}
+  .helper-card{color:#f7f9ff;border-color:rgba(117,143,229,.38);background:linear-gradient(145deg,#1e3567,#182747);border-radius:22px;box-shadow:0 24px 70px rgba(35,51,98,.24)}
+  .composer{background:#fff;border-color:#7893d8}#prompt{color:#18233c;line-height:1.5}#prompt::placeholder{color:#8995ad}.chip{background:rgba(255,255,255,.08);border-color:rgba(166,188,246,.35);color:#eef3ff}.chip:hover{background:rgba(255,255,255,.14);color:#fff}
+  .bubble{background:rgba(255,255,255,.10);border-color:rgba(183,202,255,.25);color:#edf2ff}.bubble .answer-line{margin-top:7px;color:#f1f4ff}.bubble .answer-line.kz{color:#cdd9f4}.bubble .example-answer{color:#b8c8ea}.bubble .label{color:#80dcff}
+  .main,.footer{border-color:#e0e6f2}.main{grid-template-columns:minmax(0,1fr) 340px}.section-sub{color:#7886a2}.viewall{border:0;background:transparent;color:#4668e8;font-weight:700;cursor:pointer}
+  .cards{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.card{appearance:none;text-align:left;color:#17233d;font:inherit;border:1px solid #dde5f3;border-radius:16px;background:#fff;padding:18px;min-height:190px;box-shadow:0 8px 24px rgba(57,73,116,.07);cursor:pointer;transition:transform .18s,border-color .18s,box-shadow .18s}.card:hover{transform:translateY(-3px);border-color:#91a8ef;box-shadow:0 14px 32px rgba(57,73,116,.13)}.card:focus-visible{outline:3px solid rgba(70,104,232,.25);outline-offset:2px}.card:nth-child(4n+2) .word{background:linear-gradient(90deg,#2779dd,#43a3e8)}.card:nth-child(4n) .word{background:linear-gradient(90deg,#d8732d,#e99b50)}.card:nth-child(4n+1) .word{background:linear-gradient(90deg,#4270e5,#7968e8)}
+  .lang-row{font-size:13px;line-height:1.52;color:#26334e;font-weight:650}.lang-row.kz{margin-top:7px;color:#68758e;font-weight:500}.example{color:#7e8ca7;margin-top:11px}.pill{background:#eaf0ff;color:#4668e8}
+  .cat{color:#25314b;background:#fff;border-color:#dfe6f4;transition:.18s}.cat:hover,.cat.active{border-color:#8da6ed;background:#f1f5ff}.cat-icon{background:#eaf0ff;color:#5275e8}.cat span{color:#8190aa}.try{width:100%;color:#fff;text-align:left;font:inherit;cursor:pointer;background:linear-gradient(135deg,#4770e9,#855dd6)}.try p{color:#e6ebff}.tip{background:#fff;border-color:#dfe6f4;color:#71809b}.tip b{color:#293650}.footer{color:#7886a0}
+  .toast{position:fixed;right:22px;bottom:22px;background:#1e2c4c;color:#fff;padding:11px 15px;border-radius:12px;font-size:12px;box-shadow:0 12px 32px rgba(26,39,72,.25);opacity:0;transform:translateY(10px);pointer-events:none;transition:.2s;z-index:50}.toast.show{opacity:1;transform:none}
+  body.alt-theme{--text:#f5f7ff;background:linear-gradient(180deg,#111a2e,#15213a)}body.alt-theme .topbar{background:rgba(17,26,46,.9);border-color:#293755}body.alt-theme .tagline,body.alt-theme nav{color:#aebbd5}body.alt-theme nav a.active{color:#fff}body.alt-theme .hero-copy{color:#b7c2d8}body.alt-theme .feature{color:#d9e1f0}body.alt-theme .feature .i{background:#243558;border-color:#33496f}body.alt-theme .main,body.alt-theme .footer{border-color:#2a3855}body.alt-theme .section-sub{color:#a7b4ce}body.alt-theme .card,body.alt-theme .cat,body.alt-theme .tip{background:#1c2944;border-color:#314160;color:#f4f6fc}body.alt-theme .lang-row{color:#eef2fb}body.alt-theme .lang-row.kz,body.alt-theme .example,body.alt-theme .cat span,body.alt-theme .tip{color:#abb8d0}body.alt-theme .tip b{color:#fff}body.alt-theme .moon{background:#22314f;color:#fff;border-color:#354766}
+  @media (max-width:1100px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media (max-width:680px){
+    body{overflow-x:hidden}
+    .topbar{height:60px;padding:0 16px}.brand{font-size:21px}.brand-mark{width:29px;height:29px}.moon{width:40px;height:40px}
+    .wrap{width:min(92vw,560px)}.hero{padding:32px 0 30px;gap:26px}.hero::before{display:none}
+    h1{font-size:38px;line-height:1.04;letter-spacing:-2px;margin-bottom:18px}.hero-copy{font-size:15px;line-height:1.6;margin-bottom:22px}
+    .features{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.feature{max-width:none;font-size:11px}.feature .i{flex:0 0 34px}
+    .helper-card{padding:16px;border-radius:18px}.helper-header{font-size:15px}.bot{width:34px;height:34px}.composer{padding:8px;border-radius:14px}.send{width:46px;height:46px}
+    .chips{flex-wrap:nowrap;overflow-x:auto;padding-bottom:5px;scrollbar-width:none}.chips::-webkit-scrollbar,.categories::-webkit-scrollbar{display:none}.chip{flex:0 0 auto;min-height:40px}
+    .main{display:flex;flex-direction:column;padding:30px 0 46px;gap:24px}.side{order:-1;min-width:0}.side-title{margin-bottom:11px}
+    .categories{display:flex;gap:9px;overflow-x:auto;padding:1px 1px 7px;scroll-snap-type:x proximity}.cat{min-width:190px;min-height:58px;scroll-snap-align:start}.cat:hover,.cat.active{transform:none}.cat-icon{flex:0 0 35px}.try{display:none}
+    .section-top{align-items:flex-start;flex-direction:column;gap:10px;margin-bottom:16px}.viewall{min-height:44px;padding:8px 2px;font-size:14px}.section-title{font-size:25px;letter-spacing:-.7px}
+    .cards{grid-template-columns:1fr;gap:12px}.card{min-height:176px;padding:17px}.tips-grid{gap:10px}.tip{font-size:12px}.footer{padding-inline:18px}
+    .toast{left:16px;right:16px;bottom:16px;text-align:center}
+  }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="#"><span class="brand-mark"></span>Slangify</a>
+  <div class="tagline">Real English. Real People.</div>
+  <nav><a class="active" href="#home">Home</a><a href="#dictionary">Slang Dictionary</a><a href="#practice">Practice</a><a href="#chat">Slang Helper</a><a href="#about">About</a></nav>
+  <div class="top-actions"><button class="moon" aria-label="Toggle theme">◔</button></div>
+</header>
+
+<main id="home" class="wrap">
+  <section class="hero">
+    <div>
+      <h1>Understand <span class="blue">slang.</span><br>Speak <span class="grad">like a local.</span></h1>
+      <p class="hero-copy">Type a slang word, phrase or sentence and see what it means, how it is used, and where you might hear it. Learn conversational English through real examples.</p>
+      <div class="features">
+        <div class="feature"><span class="i">ϟ</span><span>Instant explanations</span></div>
+        <div class="feature"><span class="i">▢</span><span>Real-life<br>examples</span></div>
+        <div class="feature"><span class="i">↗</span><span>Learn the most<br>used slang</span></div>
+      </div>
+    </div>
+
+    <div id="chat" class="helper-card">
+      <div class="helper-header"><span class="bot">S</span><span>Slang helper</span></div>
+      <div class="chat-area">
+        <div class="composer">
+          <textarea id="prompt" rows="1" maxlength="1000" placeholder="Type something like: 'what does lowkey mean?' or 'explain bro'"></textarea>
+          <button class="send" id="send" aria-label="Send">➜</button>
+        </div>
+        <div class="chips">
+          <button class="chip">What does 'lowkey' mean?</button>
+          <button class="chip">Explain 'sus'</button>
+          <button class="chip">What does 'bruh' mean?</button>
+          <button class="chip">Use 'lit' in a sentence</button>
+        </div>
+        <div class="chat-response" id="response"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="dictionary" class="main">
+    <div>
+      <div class="section-top"><div><div class="section-title">Most Popular Slang</div><div class="section-sub">The words and phrases everyone's using. Start with these!</div></div><button class="viewall" id="viewAll" type="button" aria-expanded="false">View all 24 →</button></div>
+      <div class="cards" id="cards"></div>
+      <div class="tips" id="practice">
+        <h3>Quick Tips</h3>
+        <div class="tips-grid">
+          <div class="tip"><b>1. Context matters</b>The same word can have different meanings depending on the situation.</div>
+          <div class="tip"><b>2. Use it in real life</b>Try slang in real conversations, not just in your head.</div>
+          <div class="tip"><b>3. Don't be afraid to make mistakes</b>It's how you learn what sounds natural.</div>
+        </div>
+      </div>
+    </div>
+    <aside class="side">
+      <div class="side-title">Popular Categories</div>
+      <div class="categories">
+        <button class="cat" data-category="everyday"><div class="cat-icon">◌</div><div><b>Everyday Slang</b><span>Common words & phrases</span></div><div class="arrow">›</div></button>
+        <button class="cat" data-category="gaming"><div class="cat-icon">⌁</div><div><b>Gaming Slang</b><span>For gamers</span></div><div class="arrow">›</div></button>
+        <button class="cat" data-category="social"><div class="cat-icon">◎</div><div><b>Social Media</b><span>TikTok, Instagram, etc.</span></div><div class="arrow">›</div></button>
+        <button class="cat" data-category="school"><div class="cat-icon">▣</div><div><b>School & Work</b><span>Useful for studying & working</span></div><div class="arrow">›</div></button>
+        <button class="cat" data-category="relationships"><div class="cat-icon">♡</div><div><b>Relationships</b><span>Friends, family & dating</span></div><div class="arrow">›</div></button>
+        <button class="cat" data-category="advanced"><div class="cat-icon">★</div><div><b>Advanced</b><span>For fluent speakers</span></div><div class="arrow">›</div></button>
+      </div>
+      <button class="try" id="tryChat" type="button"><div class="big">S</div><div><b>Open slang helper</b><p>Got a slang word or phrase?<br>Just ask!</p></div><div style="margin-left:auto">›</div></button>
+    </aside>
+  </section>
+</main>
+<footer id="about" class="footer">Slangify · Learn real conversational English</footer>
+
+<div class="toast" id="toast"></div>
+<script>
+const categories = {
+  everyday: [
+    {w:'lowkey',m:'A little; secretly.',e:'“I lowkey like it.”',p:'Everyday'},
+    {w:'kinda',m:'A little; somewhat.',e:'“I’m kinda tired.”',p:'Everyday'},
+    {w:'tbh',m:'To be honest.',e:'“Tbh, I agree.”',p:'Everyday'},
+    {w:'ngl',m:'Not gonna lie.',e:'“Ngl, that was good.”',p:'Everyday'},
+    {w:'idk',m:'I don’t know.',e:'“Idk, maybe later.”',p:'Everyday'},
+    {w:'bruh',m:'An informal reaction to something surprising or annoying.',e:'“Bruh, seriously?”',p:'Everyday'},
+    {w:'fr',m:'For real; seriously.',e:'“That’s good fr.”',p:'Everyday'},
+    {w:'lit',m:'Very exciting or fun.',e:'“The party was lit.”',p:'Everyday'},
+    {w:'bet',m:'Okay; agreed.',e:'“Meet at six?” — “Bet.”',p:'Everyday'},
+    {w:'fam',m:'A close friend or group.',e:'“What’s up, fam?”',p:'Everyday'},
+    {w:'chill',m:'Relaxed; calm down.',e:'“Let’s just chill.”',p:'Everyday'},
+    {w:'yep',m:'A casual way to say yes.',e:'“Yep, I’m ready.”',p:'Everyday'},
+    {w:'nope',m:'A casual way to say no.',e:'“Nope, not today.”',p:'Everyday'},
+    {w:'catch up',m:'Talk after time apart.',e:'“Let’s catch up soon.”',p:'Everyday'},
+    {w:'hit me up',m:'Message or contact me.',e:'“Hit me up later.”',p:'Everyday'},
+    {w:'my fault',m:'It was my mistake.',e:'“Sorry, my fault.”',p:'Everyday'},
+    {w:'for sure',m:'Definitely; certainly.',k:'Әрине; міндетті түрде.',e:'“I’ll be there for sure.”',p:'Everyday'},
+    {w:'whatever',m:'It does not matter.',k:'Бәрібір; маңызды емес.',e:'“Whatever works for you.”',p:'Everyday'},
+    {w:'gotcha',m:'I understand.',k:'Түсіндім.',e:'“Gotcha, I’ll do it.”',p:'Everyday'},
+    {w:'same',m:'I feel the same way.',k:'Мен де солай ойлаймын.',e:'“I’m tired.” — “Same.”',p:'Everyday'},
+    {w:'fair enough',m:'That seems reasonable.',k:'Орынды екен.',e:'“Fair enough, I agree.”',p:'Everyday'},
+    {w:'give me a sec',m:'Wait a short moment.',k:'Бір сәт күте тұр.',e:'“Give me a sec, please.”',p:'Everyday'},
+    {w:'I’m down',m:'I want to join.',k:'Мен қатысуға дайынмын.',e:'“Want to play?” — “I’m down.”',p:'Everyday'},
+    {w:'sounds good',m:'That plan is okay.',k:'Жақсы жоспар екен.',e:'“Meet at five?” — “Sounds good.”',p:'Everyday'}
+  ],
+  gaming: [
+    {w:'gg',m:'Good game.',e:'“GG, that was close.”',p:'Gaming'},
+    {w:'noob',m:'A new or inexperienced player.',e:'“I was a noob at first.”',p:'Gaming'},
+    {w:'clutch',m:'A great action at an important moment.',e:'“That was a clutch play.”',p:'Gaming'},
+    {w:'nerf',m:'To make something weaker in a game.',e:'“They nerfed that weapon.”',p:'Gaming'},
+    {w:'buff',m:'To make something stronger in a game.',e:'“They buffed the character.”',p:'Gaming'},
+    {w:'OP',m:'Overpowered; very strong.',e:'“That weapon is OP.”',p:'Gaming'},
+    {w:'AFK',m:'Away from the keyboard.',e:'“He is AFK.”',p:'Gaming'},
+    {w:'carry',m:'To do most of the work for a team.',e:'“She carried the team.”',p:'Gaming'},
+    {w:'rage quit',m:'Leave a game because you are angry.',e:'“He rage quit after losing.”',p:'Gaming'},
+    {w:'spawn',m:'Appear in the game world.',e:'“Enemies spawn here.”',p:'Gaming'},
+    {w:'grind',m:'Repeat tasks to make progress.',e:'“I’m grinding for a new rank.”',p:'Gaming'},
+    {w:'squad',m:'A team of players.',e:'“Join our squad.”',p:'Gaming'},
+    {w:'main',m:'Your most-used character.',e:'“This hero is my main.”',p:'Gaming'},
+    {w:'lag',m:'A delay caused by a slow connection.',e:'“I lost because of lag.”',p:'Gaming'},
+    {w:'GGWP',m:'Good game, well played.',e:'“GGWP, everyone.”',p:'Gaming'},
+    {w:'speedrun',m:'Finish a game as fast as possible.',e:'“He tried a speedrun.”',p:'Gaming'},
+    {w:'NPC',m:'A character controlled by the game.',k:'Ойын басқаратын кейіпкер.',e:'“Talk to that NPC.”',p:'Gaming'},
+    {w:'camp',m:'Stay in one place to surprise opponents.',k:'Қарсыласты күтіп бір жерде отыру.',e:'“They camp near the door.”',p:'Gaming'},
+    {w:'loot',m:'Useful items found in a game.',k:'Ойында табылатын пайдалы заттар.',e:'“We found rare loot.”',p:'Gaming'},
+    {w:'respawn',m:'Return after being defeated.',k:'Жеңілгеннен кейін қайта пайда болу.',e:'“I’ll respawn in ten seconds.”',p:'Gaming'},
+    {w:'queue',m:'Wait to join a match.',k:'Матчқа қосылу кезегі.',e:'“We’re in the queue.”',p:'Gaming'},
+    {w:'ranked',m:'A competitive match that affects rank.',k:'Рейтингке әсер ететін матч.',e:'“Let’s play ranked.”',p:'Gaming'},
+    {w:'one-shot',m:'Defeat with one hit.',k:'Бір соққымен жеңу.',e:'“That boss can one-shot you.”',p:'Gaming'},
+    {w:'patch',m:'A game update with changes and fixes.',k:'Ойынның жаңартуы.',e:'“The new patch fixed it.”',p:'Gaming'}
+  ],
+  social: [
+    {w:'slay',m:'Do something extremely well.',e:'“You slayed that presentation.”',p:'Social'},
+    {w:'sus',m:'Suspicious or questionable.',e:'“That sounds sus.”',p:'Social'},
+    {w:'POV',m:'Point of view; a common post format.',e:'“POV: you forgot your homework.”',p:'Social'},
+    {w:'GOAT',m:'The greatest of all time.',e:'“She’s the GOAT.”',p:'Social'},
+    {w:'valid',m:'Reasonable or understandable.',e:'“That opinion is valid.”',p:'Social'},
+    {w:'based',m:'Strongly agreeing with an opinion.',e:'“That take is based.”',p:'Social'},
+    {w:'cap',m:'A lie or exaggeration.',e:'“That’s cap.”',p:'Social'},
+    {w:'no cap',m:'Seriously; no lie.',e:'“No cap, this is great.”',p:'Social'},
+    {w:'FYP',m:'For You Page on TikTok.',e:'“It showed up on my FYP.”',p:'Social'},
+    {w:'viral',m:'Shared very widely online.',e:'“That video went viral.”',p:'Social'},
+    {w:'repost',m:'Share someone’s post again.',e:'“I reposted the clip.”',p:'Social'},
+    {w:'flex',m:'Show off something proudly.',e:'“That photo is a flex.”',p:'Social'},
+    {w:'meme',m:'A funny idea or image shared online.',e:'“Send me that meme.”',p:'Social'},
+    {w:'ratio',m:'A reply getting more reactions than a post.',e:'“That reply got a ratio.”',p:'Social'},
+    {w:'thread',m:'A connected series of posts.',e:'“Read the full thread.”',p:'Social'},
+    {w:'mutual',m:'Someone who follows you back.',e:'“We’re mutuals now.”',p:'Social'},
+    {w:'DMs',m:'Private messages on social media.',k:'Әлеуметтік желідегі жеке хабарламалар.',e:'“Check your DMs.”',p:'Social'},
+    {w:'story',m:'A post that disappears later.',k:'Кейін жоғалатын уақытша жазба.',e:'“I saw it on your story.”',p:'Social'},
+    {w:'duet',m:'A TikTok video made beside another video.',k:'Басқа видеомен қатар жасалған TikTok видеосы.',e:'“Let’s make a duet.”',p:'Social'},
+    {w:'stitch',m:'Add your video after part of another.',k:'Басқа видеоның бөлігіне өз видеоңды қосу.',e:'“She stitched the original clip.”',p:'Social'},
+    {w:'creator',m:'Someone who makes online content.',k:'Интернетке контент жасайтын адам.',e:'“He’s a video creator.”',p:'Social'},
+    {w:'scroll',m:'Move through posts on a screen.',k:'Экрандағы жазбаларды төмен қарай қарау.',e:'“I kept scrolling.”',p:'Social'},
+    {w:'trending',m:'Popular online right now.',k:'Қазір интернетте танымал.',e:'“That sound is trending.”',p:'Social'},
+    {w:'receipts',m:'Proof such as screenshots or messages.',k:'Скриншот не хабарлама түріндегі дәлел.',e:'“She brought the receipts.”',p:'Social'}
+  ],
+  school: [
+    {w:'cram',m:'Study a lot in a short time.',e:'“I had to cram for the test.”',p:'School'},
+    {w:'ace',m:'Do extremely well on a test.',e:'“I aced the exam.”',p:'School'},
+    {w:'my bad',m:'An informal way to say sorry.',e:'“My bad, I forgot.”',p:'School'},
+    {w:'ASAP',m:'As soon as possible.',e:'“Send it ASAP.”',p:'School & Work'},
+    {w:'FYI',m:'For your information.',e:'“FYI, class starts at nine.”',p:'School & Work'},
+    {w:'deadline',m:'The final time to finish something.',e:'“The deadline is Friday.”',p:'School & Work'},
+    {w:'heads-up',m:'A warning or advance notice.',e:'“Just a heads-up: it changed.”',p:'School & Work'},
+    {w:'wrap up',m:'Finish or complete something.',e:'“Let’s wrap up the project.”',p:'School & Work'},
+    {w:'brainstorm',m:'Think of many ideas together.',e:'“Let’s brainstorm solutions.”',p:'School & Work'},
+    {w:'hand in',m:'Submit an assignment.',e:'“Hand it in by Friday.”',p:'School & Work'},
+    {w:'catch up',m:'Reach the expected progress.',e:'“I need to catch up in math.”',p:'School & Work'},
+    {w:'figure out',m:'Understand or solve something.',e:'“We’ll figure it out.”',p:'School & Work'},
+    {w:'check in',m:'Give or ask for a short update.',e:'“Let’s check in tomorrow.”',p:'School & Work'},
+    {w:'draft',m:'An unfinished first version.',e:'“I finished the first draft.”',p:'School & Work'},
+    {w:'feedback',m:'Advice about how to improve.',e:'“Can I get some feedback?”',p:'School & Work'},
+    {w:'on track',m:'Making progress as planned.',e:'“The project is on track.”',p:'School & Work'},
+    {w:'team up',m:'Work together.',k:'Бірге жұмыс істеу.',e:'“Let’s team up for the project.”',p:'School & Work'},
+    {w:'look over',m:'Check something quickly.',k:'Бір нәрсені жылдам тексеру.',e:'“Can you look over my draft?”',p:'School & Work'},
+    {w:'point out',m:'Draw attention to something.',k:'Бір нәрсеге назар аударту.',e:'“She pointed out a mistake.”',p:'School & Work'},
+    {w:'set up',m:'Prepare or arrange something.',k:'Бір нәрсені дайындау.',e:'“Let’s set up the experiment.”',p:'School & Work'},
+    {w:'due',m:'Expected to be submitted by a time.',k:'Белгілі уақытқа дейін тапсырылуы керек.',e:'“The essay is due Monday.”',p:'School & Work'},
+    {w:'revise',m:'Review and improve your work.',k:'Жұмысты қарап, жақсарту.',e:'“I need to revise my essay.”',p:'School & Work'},
+    {w:'take notes',m:'Write down important information.',k:'Маңызды ақпаратты жазып алу.',e:'“Take notes during class.”',p:'School & Work'},
+    {w:'pull through',m:'Succeed despite difficulty.',k:'Қиындыққа қарамастан орындап шығу.',e:'“Our team pulled through.”',p:'School & Work'}
+  ],
+  relationships: [
+    {w:'bro',m:'A casual way to say friend or guy.',e:'“What’s up, bro?”',p:'Relationships'},
+    {w:'bestie',m:'A very close friend.',e:'“That’s my bestie.”',p:'Relationships'},
+    {w:'bae',m:'A person you love or like romantically.',e:'“I’m meeting my bae.”',p:'Relationships'},
+    {w:'ghost',m:'Stop replying or communicating.',e:'“He ghosted me.”',p:'Relationships'},
+    {w:'vibe',m:'A feeling or atmosphere.',e:'“We have a good vibe.”',p:'Relationships'},
+    {w:'hang out',m:'Spend time together casually.',e:'“Want to hang out?”',p:'Relationships'},
+    {w:'crush',m:'Someone you like romantically.',e:'“I have a crush on her.”',p:'Relationships'},
+    {w:'DM',m:'A private direct message.',e:'“DM me later.”',p:'Relationships'},
+    {w:'homie',m:'A close friend.',e:'“That’s my homie.”',p:'Relationships'},
+    {w:'squad',m:'A close group of friends.',e:'“The whole squad is here.”',p:'Relationships'},
+    {w:'click',m:'Get along naturally.',e:'“We clicked right away.”',p:'Relationships'},
+    {w:'drift apart',m:'Slowly become less close.',e:'“We drifted apart.”',p:'Relationships'},
+    {w:'make up',m:'Become friendly again after an argument.',e:'“They made up yesterday.”',p:'Relationships'},
+    {w:'catch feelings',m:'Start liking someone romantically.',e:'“He caught feelings.”',p:'Relationships'},
+    {w:'ride or die',m:'A very loyal friend.',e:'“She’s my ride or die.”',p:'Relationships'},
+    {w:'third wheel',m:'An extra person with a couple.',e:'“I felt like a third wheel.”',p:'Relationships'},
+    {w:'go way back',m:'Know someone for a long time.',k:'Біреуді көптен бері тану.',e:'“We go way back.”',p:'Relationships'},
+    {w:'have your back',m:'Support and protect you.',k:'Сені қолдау және қорғау.',e:'“I’ve got your back.”',p:'Relationships'},
+    {w:'get along',m:'Have a friendly relationship.',k:'Бір-бірімен жақсы тіл табысу.',e:'“We get along well.”',p:'Relationships'},
+    {w:'keep in touch',m:'Continue communicating.',k:'Хабарласып тұру.',e:'“Let’s keep in touch.”',p:'Relationships'},
+    {w:'open up',m:'Share personal thoughts honestly.',k:'Ойыңды ашық айту.',e:'“He opened up to his friend.”',p:'Relationships'},
+    {w:'stand up for',m:'Defend someone or something.',k:'Біреуді немесе бір нәрсені қорғау.',e:'“She stood up for her friend.”',p:'Relationships'},
+    {w:'fall out',m:'Stop being friendly after an argument.',k:'Ұрыстан кейін араласпай кету.',e:'“They fell out last week.”',p:'Relationships'},
+    {w:'inside joke',m:'A joke only a group understands.',k:'Тек белгілі бір топ түсінетін әзіл.',e:'“It’s an inside joke.”',p:'Relationships'}
+  ],
+  advanced: [
+    {w:'nuance',m:'A small but important difference.',e:'“There’s some nuance here.”',p:'Advanced'},
+    {w:'context',m:'The situation that gives words meaning.',e:'“It depends on context.”',p:'Advanced'},
+    {w:'literally',m:'Exactly or in the real sense; often used for emphasis.',e:'“I literally forgot.”',p:'Advanced'},
+    {w:'ironically',m:'In a way that contrasts with the expected meaning.',e:'“He said it ironically.”',p:'Advanced'},
+    {w:'legit',m:'Genuine, real, or very good.',e:'“That place is legit.”',p:'Advanced'},
+    {w:'valid',m:'Reasonable or worth considering.',e:'“That’s a valid point.”',p:'Advanced'},
+    {w:'awkward',m:'Uncomfortable or socially difficult.',e:'“That was awkward.”',p:'Advanced'},
+    {w:'understated',m:'Expressed in a restrained way.',e:'“That was an understated joke.”',p:'Advanced'},
+    {w:'deadpan',m:'Funny while showing no emotion.',e:'“She said it deadpan.”',p:'Advanced'},
+    {w:'sarcastic',m:'Saying the opposite to mock or joke.',e:'“He was being sarcastic.”',p:'Advanced'},
+    {w:'subtle',m:'Not obvious; hard to notice.',e:'“That was a subtle hint.”',p:'Advanced'},
+    {w:'read the room',m:'Notice how people feel before speaking.',e:'“Please read the room.”',p:'Advanced'},
+    {w:'hot take',m:'A strong or unpopular opinion.',e:'“Here’s my hot take.”',p:'Advanced'},
+    {w:'out of pocket',m:'Unexpected or inappropriate.',e:'“That comment was out of pocket.”',p:'Advanced'},
+    {w:'wild',m:'Very surprising or extreme.',e:'“That story is wild.”',p:'Advanced'},
+    {w:'touch grass',m:'Take a break from being online.',e:'“Go touch grass for a while.”',p:'Advanced'},
+    {w:'low-profile',m:'Quiet and not attracting attention.',k:'Көзге түспей, тыныш жүру.',e:'“He keeps a low profile.”',p:'Advanced'},
+    {w:'mixed signals',m:'Actions that are hard to understand.',k:'Түсіну қиын қарама-қайшы белгілер.',e:'“I’m getting mixed signals.”',p:'Advanced'},
+    {w:'call it out',m:'Say openly that something is wrong.',k:'Бір нәрсенің дұрыс емес екенін ашық айту.',e:'“She called out the mistake.”',p:'Advanced'},
+    {w:'hold up',m:'Wait; stop for a moment.',k:'Күте тұр; бір сәт тоқта.',e:'“Hold up, what happened?”',p:'Advanced'},
+    {w:'double down',m:'Support a decision even more strongly.',k:'Өз шешімін одан әрі берік қорғау.',e:'“He doubled down on his opinion.”',p:'Advanced'},
+    {w:'under the radar',m:'Without attracting attention.',k:'Көзге түспей.',e:'“The song stayed under the radar.”',p:'Advanced'},
+    {w:'on point',m:'Exactly right or very good.',k:'Дәл әрі өте жақсы.',e:'“Your explanation was on point.”',p:'Advanced'},
+    {w:'not it',m:'Not good or not acceptable.',k:'Жақсы емес; жарамайды.',e:'“That answer is not it.”',p:'Advanced'}
+  ]
+};
+let currentCategory='everyday';
+const INITIAL_LIMIT=16;
+let expanded=false;
+const cards = document.getElementById('cards');
+const viewAll=document.getElementById('viewAll');
+function renderCards(list){
+  cards.innerHTML='';
+  list.forEach(x=>{
+    const el=document.createElement('button'); el.className='card'; el.type='button';
+    el.innerHTML=`<span class="word">${x.w}</span>
+      <div class="lang-row" lang="en">${x.m}</div>
+      <div class="lang-row kz" lang="kk">${x.k||translateShort(x.w)}</div>
+      <div class="example">${x.e}</div><span class="pill">${x.p}</span>`;
+    el.addEventListener('click',()=>{ask(`Explain ${x.w}`);document.getElementById('chat').scrollIntoView({behavior:'smooth',block:'center'});});
+    cards.appendChild(el);
+  });
+}
+renderCards(categories[currentCategory].slice(0,INITIAL_LIMIT));
+
+document.querySelectorAll('.cat').forEach(cat=>cat.addEventListener('click',()=>{
+  currentCategory=cat.dataset.category;
+  expanded=false;
+  document.querySelectorAll('.cat').forEach(c=>c.classList.remove('active'));
+  cat.classList.add('active');
+  renderCards(categories[currentCategory].slice(0,INITIAL_LIMIT));
+  viewAll.textContent=`View all ${categories[currentCategory].length} →`;
+  viewAll.setAttribute('aria-expanded','false');
+  document.querySelector('.section-title').textContent=cat.querySelector('b').textContent;
+  document.querySelector('.section-sub').textContent='Useful slang and expressions from this category.';
+  document.getElementById('dictionary').scrollIntoView({behavior:'smooth',block:'start'});
+}));
+document.querySelector('.cat[data-category="everyday"]').classList.add('active');
+
+const prompt=document.getElementById('prompt');
+const response=document.getElementById('response');
+const send=document.getElementById('send');
+function resizeInput(){prompt.style.height='auto';prompt.style.height=Math.min(prompt.scrollHeight,230)+'px'}
+prompt.addEventListener('input',resizeInput);
+prompt.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();ask(prompt.value)}});
+document.querySelectorAll('.chip').forEach(ch=>ch.addEventListener('click',()=>ask(ch.textContent)));
+send.addEventListener('click',()=>ask(prompt.value));
+
+function getDemoAnswer(q){
+  const s=q.toLowerCase();
+  const all=Object.values(categories).flat().sort((a,b)=>b.w.length-a.w.length);
+  const key=all.find(x=>s.includes(x.w.toLowerCase()));
+  if(key) return {word:key.w, en:key.m, kk:key.k||translateShort(key.w), example:key.e};
+  return {word:'Phrase',en:'Ask about one slang word.',kk:'Бір сленг сөзін сұра.'};
+}
+function translateShort(w){
+  const kk={
+    'lowkey':'Аздап; білдіртпей.','kinda':'Сәл; біршама.','tbh':'Шынымды айтсам.','ngl':'Шынымды айтсам.','idk':'Білмеймін.','bruh':'Таңдану не ренжу реакциясы.','fr':'Шынымен.','lit':'Өте қызық; керемет.',
+    'gg':'Жақсы ойын.','noob':'Тәжірибесі аз жаңа ойыншы.','clutch':'Маңызды сәттегі сәтті әрекет.','nerf':'Ойындағы нәрсені әлсірету.','buff':'Ойындағы нәрсені күшейту.','OP':'Тым күшті.','AFK':'Компьютерден уақытша алыста.','carry':'Команданың негізгі жұмысын атқару.',
+    'slay':'Бір нәрсені өте жақсы жасау.','sus':'Күдікті.','POV':'Көзқарас; жағдайды бір адамның атынан көрсету.','GOAT':'Барлық уақыттағы ең мықты.','valid':'Орынды; түсінікті.','based':'Пікірді батыл қолдау.','cap':'Өтірік немесе асыра айту.','no cap':'Шынымен; өтірік емес.',
+    'cram':'Қысқа уақытта көп оқу.','ace':'Емтиханды өте жақсы тапсыру.','my bad':'Менің қателігім; кешір.','ASAP':'Мүмкіндігінше тез.','FYI':'Ақпарат үшін.','deadline':'Соңғы тапсыру мерзімі.','heads-up':'Алдын ала ескерту.','wrap up':'Аяқтау; қорытындылау.',
+    'bro':'Досқа не жігітке бейресми қаратпа.','bestie':'Ең жақын дос.','bae':'Жақын немесе сүйікті адам.','ghost':'Біреуге жауап беруді кенет тоқтату.','vibe':'Атмосфера; көңіл-күй.','hang out':'Бірге уақыт өткізу.','crush':'Ұнайтын адам.','DM':'Жеке хабарлама.',
+    'nuance':'Кішкентай, бірақ маңызды айырмашылық.','context':'Сөздің мағынасын түсіндіретін жағдай.','literally':'Тура мағынада; кейде екпін үшін айтылады.','ironically':'Күтілген мағынаға қарама-қарсы түрде.','legit':'Шынайы; расымен жақсы.','awkward':'Ыңғайсыз.','understated':'Әдейі қарапайым, асыра айтылмаған.',
+    'bet':'Жарайды; келістік.','fam':'Жақын дос немесе топ.','chill':'Демалу; сабыр сақтау.','yep':'Иә сөзінің бейресми түрі.','nope':'Жоқ сөзінің бейресми түрі.','catch up':'Қалып қойғанды толықтыру немесе сөйлесу.','hit me up':'Маған кейін хабарлас.','my fault':'Менің қателігім.',
+    'rage quit':'Ашуланып ойыннан шығып кету.','spawn':'Ойын әлемінде пайда болу.','grind':'Нәтиже үшін тапсырманы қайталай беру.','squad':'Команда немесе жақын достар тобы.','main':'Ең көп ойнайтын кейіпкер.','lag':'Интернетке байланысты кешігу.','GGWP':'Жақсы ойын, жақсы ойнадыңдар.','speedrun':'Ойынды барынша тез аяқтау.',
+    'FYP':'TikTok-тағы ұсыныстар парағы.','viral':'Интернетте өте тез таралған.','repost':'Біреудің жазбасын қайта бөлісу.','flex':'Бір нәрсені мақтанып көрсету.','meme':'Интернетте тарайтын күлкілі сурет не ой.','ratio':'Жауаптың бастапқы жазбадан көп реакция жинауы.','thread':'Бір тақырыптағы жалғасқан жазбалар.','mutual':'Сені де кері оқитын адам.',
+    'brainstorm':'Бірге көп идея ойлау.','hand in':'Тапсырманы өткізу.','figure out':'Түсіну немесе шешім табу.','check in':'Қысқаша жаңалық білу.','draft':'Жұмыстың алғашқы нұсқасы.','feedback':'Жақсартуға арналған пікір.','on track':'Жоспар бойынша жүріп жатыр.',
+    'homie':'Жақын дос.','click':'Бірден тіл табысу.','drift apart':'Біртіндеп алыстап кету.','make up':'Ренжіскеннен кейін татуласу.','catch feelings':'Біреуді ұната бастау.','ride or die':'Өте адал дос.','third wheel':'Жұптың жанындағы артық адам.',
+    'deadpan':'Сезім көрсетпей әзіл айту.','sarcastic':'Әзіл не мысқыл үшін керісінше айту.','subtle':'Бірден байқалмайтын.','read the room':'Адамдардың көңіл күйін байқау.','hot take':'Батыл немесе даулы пікір.','out of pocket':'Орынсыз немесе күтпеген.','wild':'Өте таңғаларлық.','touch grass':'Интернеттен үзіліс жасау.'
+  };
+  return kk[w]||'Мағынасы контекстке байланысты.';
+}
+function ask(q){
+  q=(q||'').trim();if(!q)return;
+  prompt.value=q;resizeInput();
+  const a=getDemoAnswer(q);response.classList.add('show');
+  response.innerHTML=`<div class="message"><div class="avatar">S</div><div class="bubble"><div><strong>${escapeHtml(a.word)}</strong></div><div class="answer-line" lang="en">${escapeHtml(a.en)}</div><div class="answer-line kz" lang="kk">${escapeHtml(a.kk)}</div>${a.example?`<div class="example-answer">${escapeHtml(a.example)}</div>`:''}</div></div>`;
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+
+
+// Make the remaining interface controls interactive.
+viewAll.addEventListener('click',()=>{
+  expanded=!expanded;
+  const current=categories[currentCategory];
+  renderCards(expanded?current:current.slice(0,INITIAL_LIMIT));
+  viewAll.textContent=expanded?'Show less ↑':`View all ${current.length} →`;
+  viewAll.setAttribute('aria-expanded',String(expanded));
+  document.querySelector('.section-sub').textContent=expanded
+    ?`Showing all ${current.length} words from this category.`
+    :'Useful slang and expressions from this category.';
+});
+
+document.getElementById('tryChat').addEventListener('click',()=>{
+  document.getElementById('chat').scrollIntoView({behavior:'smooth',block:'center'});
+  setTimeout(()=>prompt.focus(),450);
+});
+
+const toast=document.getElementById('toast');
+function showToast(text){
+  toast.textContent=text;toast.classList.add('show');
+  clearTimeout(showToast.t);showToast.t=setTimeout(()=>toast.classList.remove('show'),1800);
+}
+
+const themeBtn=document.querySelector('.moon');
+themeBtn.addEventListener('click',()=>{
+  document.body.classList.toggle('alt-theme');
+  themeBtn.textContent=document.body.classList.contains('alt-theme')?'◑':'◔';
+  showToast('Theme changed');
+});
+
+document.querySelector('.brand').addEventListener('click',e=>{
+  e.preventDefault();document.getElementById('home').scrollIntoView({behavior:'smooth'});
+});
+
+document.querySelectorAll('nav a').forEach(link=>link.addEventListener('click',()=>{
+  document.querySelectorAll('nav a').forEach(a=>a.classList.remove('active'));
+  link.classList.add('active');
+}));
+
+</script>
+</body>
+</html>
