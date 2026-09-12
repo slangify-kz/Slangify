@@ -81,6 +81,10 @@
   .try{margin-top:15px;border-radius:15px;padding:15px;background:linear-gradient(135deg,rgba(29,73,185,.9),rgba(80,48,185,.85));border:1px solid rgba(134,132,255,.4);display:flex;align-items:center;gap:12px}.try .big{width:42px;height:42px;border-radius:13px;background:rgba(255,255,255,.11);display:grid;place-items:center;font-size:19px}.try b{font-size:14px}.try p{margin:3px 0 0;color:#d2d9ef;font-size:10px;line-height:1.4}
   .tips{grid-column:1 / -1;margin-top:3px}.tips h3{font-size:18px;margin:0 0 11px}.tips-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}.tip{border:1px solid rgba(70,104,168,.22);background:rgba(7,23,48,.55);padding:13px 15px;border-radius:12px;color:#9eb1d4;font-size:11px;line-height:1.5}.tip b{color:#e8edf8;display:block;margin-bottom:4px}
   .footer{border-top:1px solid rgba(100,125,180,.11);padding:26px 0 38px;color:#697fa8;font-size:11px;text-align:center}
+  .search-tools{margin:0 0 18px}.search-shell{display:flex;align-items:center;gap:10px;border:1px solid #d9e2f3;background:#fff;border-radius:15px;padding:7px 8px 7px 14px;box-shadow:0 7px 22px rgba(57,73,116,.06)}
+  .search-icon{font-size:19px;color:#6b7b99}.search-input{width:100%;min-width:0;border:0;outline:0;background:transparent;color:#17233d;padding:8px 0;font-size:14px}.search-input::placeholder{color:#8a97ae}
+  .clear-search{display:none;flex:0 0 auto;border:0;border-radius:10px;background:#edf2ff;color:#4567db;font-weight:700;padding:9px 12px;cursor:pointer}.clear-search.show{display:block}.result-meta{min-height:18px;margin:7px 3px 0;color:#7886a2;font-size:11px}
+  .empty-state{grid-column:1/-1;text-align:center;border:1px dashed #cfd9eb;border-radius:16px;background:rgba(255,255,255,.7);padding:38px 18px;color:#6f7e99}.empty-state b{display:block;color:#26344f;margin-bottom:7px;font-size:16px}
   @media (max-width:1100px){nav{gap:17px}.hero{grid-template-columns:1fr}.cards{grid-template-columns:repeat(2,1fr)}.main{grid-template-columns:1fr}.side{order:2}}
   @media (max-width:680px){.topbar{padding:0 18px}.tagline,nav,.signin{display:none}.brand{min-width:0}.top-actions{margin-left:auto}.wrap{width:min(94vw,600px)}.hero{padding-top:35px;gap:32px}.features{gap:13px}.cards,.tips-grid{grid-template-columns:1fr}.section-title{font-size:24px}.section-title small{font-size:24px}.helper-card{padding:17px}.main{padding-top:38px}}
 
@@ -98,6 +102,7 @@
   .cat{color:#25314b;background:#fff;border-color:#dfe6f4;transition:.18s}.cat:hover,.cat.active{border-color:#8da6ed;background:#f1f5ff}.cat-icon{background:#eaf0ff;color:#5275e8}.cat span{color:#8190aa}.try{width:100%;color:#fff;text-align:left;font:inherit;cursor:pointer;background:linear-gradient(135deg,#4770e9,#855dd6)}.try p{color:#e6ebff}.tip{background:#fff;border-color:#dfe6f4;color:#71809b}.tip b{color:#293650}.footer{color:#7886a0}
   .toast{position:fixed;right:22px;bottom:22px;background:#1e2c4c;color:#fff;padding:11px 15px;border-radius:12px;font-size:12px;box-shadow:0 12px 32px rgba(26,39,72,.25);opacity:0;transform:translateY(10px);pointer-events:none;transition:.2s;z-index:50}.toast.show{opacity:1;transform:none}
   body.alt-theme{--text:#f5f7ff;background:linear-gradient(180deg,#111a2e,#15213a)}body.alt-theme .topbar{background:rgba(17,26,46,.9);border-color:#293755}body.alt-theme .tagline,body.alt-theme nav{color:#aebbd5}body.alt-theme nav a.active{color:#fff}body.alt-theme .hero-copy{color:#b7c2d8}body.alt-theme .feature{color:#d9e1f0}body.alt-theme .feature .i{background:#243558;border-color:#33496f}body.alt-theme .main,body.alt-theme .footer{border-color:#2a3855}body.alt-theme .section-sub{color:#a7b4ce}body.alt-theme .card,body.alt-theme .cat,body.alt-theme .tip{background:#1c2944;border-color:#314160;color:#f4f6fc}body.alt-theme .lang-row{color:#eef2fb}body.alt-theme .lang-row.kz,body.alt-theme .example,body.alt-theme .cat span,body.alt-theme .tip{color:#abb8d0}body.alt-theme .tip b{color:#fff}body.alt-theme .moon{background:#22314f;color:#fff;border-color:#354766}
+  body.alt-theme .search-shell{background:#1c2944;border-color:#354766}body.alt-theme .search-input{color:#f4f6fc}body.alt-theme .search-input::placeholder{color:#8999b6}body.alt-theme .clear-search{background:#2a3c61;color:#dce5ff}body.alt-theme .empty-state{background:#1c2944;border-color:#3b4b69;color:#aab8d1}body.alt-theme .empty-state b{color:#fff}
   @media (max-width:1100px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
   @media (max-width:680px){
     body{overflow-x:hidden}
@@ -109,6 +114,7 @@
     .chips{flex-wrap:nowrap;overflow-x:auto;padding-bottom:5px;scrollbar-width:none}.chips::-webkit-scrollbar,.categories::-webkit-scrollbar{display:none}.chip{flex:0 0 auto;min-height:40px}
     .main{display:flex;flex-direction:column;padding:30px 0 46px;gap:24px}.side{order:-1;min-width:0}.side-title{margin-bottom:11px}
     .categories{display:flex;gap:9px;overflow-x:auto;padding:1px 1px 7px;scroll-snap-type:x proximity}.cat{min-width:190px;min-height:58px;scroll-snap-align:start}.cat:hover,.cat.active{transform:none}.cat-icon{flex:0 0 35px}.try{display:none}
+    .search-shell{border-radius:13px;padding-left:12px}.search-input{font-size:16px}.clear-search{min-height:40px}
     .section-top{align-items:flex-start;flex-direction:column;gap:10px;margin-bottom:16px}.viewall{min-height:44px;padding:8px 2px;font-size:14px}.section-title{font-size:25px;letter-spacing:-.7px}
     .cards{grid-template-columns:1fr;gap:12px}.card{min-height:176px;padding:17px}.tips-grid{gap:10px}.tip{font-size:12px}.footer{padding-inline:18px}
     .toast{left:16px;right:16px;bottom:16px;text-align:center}
@@ -127,19 +133,19 @@
   <section class="hero">
     <div>
       <h1>Understand <span class="blue">slang.</span><br>Speak <span class="grad">like a local.</span></h1>
-      <p class="hero-copy">Type a slang word, phrase or sentence and see what it means, how it is used, and where you might hear it. Learn conversational English through real examples.</p>
+      <p class="hero-copy">Search a large English slang dictionary with clear meanings in English and Kazakh. Explore texting abbreviations, spoken forms, gaming language, internet phrases and real examples.</p>
       <div class="features">
         <div class="feature"><span class="i">ϟ</span><span>Instant explanations</span></div>
         <div class="feature"><span class="i">▢</span><span>Real-life<br>examples</span></div>
-        <div class="feature"><span class="i">↗</span><span>Learn the most<br>used slang</span></div>
+        <div class="feature"><span class="i">↗</span><span><b id="termCount">500+</b> words,<br>phrases & shortcuts</span></div>
       </div>
     </div>
 
     <div id="chat" class="helper-card">
-      <div class="helper-header"><span class="bot">S</span><span>Slang helper</span></div>
+      <div class="helper-header"><span class="bot">S</span><span>Slang search</span></div>
       <div class="chat-area">
         <div class="composer">
-          <textarea id="prompt" rows="1" maxlength="1000" placeholder="Type something like: 'what does lowkey mean?' or 'explain bro'"></textarea>
+          <textarea id="prompt" rows="1" maxlength="1000" placeholder="Type a word or abbreviation: lowkey, IYKYK, gonna..."></textarea>
           <button class="send" id="send" aria-label="Send">➜</button>
         </div>
         <div class="chips">
@@ -155,7 +161,11 @@
 
   <section id="dictionary" class="main">
     <div>
-      <div class="section-top"><div><div class="section-title">Most Popular Slang</div><div class="section-sub">The words and phrases everyone's using. Start with these!</div></div><button class="viewall" id="viewAll" type="button" aria-expanded="false">View all 24 →</button></div>
+      <div class="section-top"><div><div class="section-title">Everyday Slang</div><div class="section-sub">Popular words and phrases for daily conversations.</div></div><button class="viewall" id="viewAll" type="button" aria-expanded="false">View all →</button></div>
+      <div class="search-tools">
+        <div class="search-shell"><span class="search-icon">⌕</span><input class="search-input" id="slangSearch" type="search" autocomplete="off" spellcheck="false" aria-label="Search the slang dictionary" placeholder="Search every slang word, meaning or Kazakh translation"><button class="clear-search" id="clearSearch" type="button">Clear</button></div>
+        <div class="result-meta" id="resultMeta" aria-live="polite"></div>
+      </div>
       <div class="cards" id="cards"></div>
       <div class="tips" id="practice">
         <h3>Quick Tips</h3>
@@ -170,11 +180,14 @@
       <div class="side-title">Popular Categories</div>
       <div class="categories">
         <button class="cat" data-category="everyday"><div class="cat-icon">◌</div><div><b>Everyday Slang</b><span>Common words & phrases</span></div><div class="arrow">›</div></button>
+        <button class="cat" data-category="texting"><div class="cat-icon">Aa</div><div><b>Text & Abbreviations</b><span>Messages, acronyms & shortcuts</span></div><div class="arrow">›</div></button>
+        <button class="cat" data-category="spoken"><div class="cat-icon">“ ”</div><div><b>Spoken English</b><span>Gonna, wanna, gotta & more</span></div><div class="arrow">›</div></button>
+        <button class="cat" data-category="internet"><div class="cat-icon">#</div><div><b>Internet & Memes</b><span>Current online language</span></div><div class="arrow">›</div></button>
         <button class="cat" data-category="gaming"><div class="cat-icon">⌁</div><div><b>Gaming Slang</b><span>For gamers</span></div><div class="arrow">›</div></button>
         <button class="cat" data-category="social"><div class="cat-icon">◎</div><div><b>Social Media</b><span>TikTok, Instagram, etc.</span></div><div class="arrow">›</div></button>
         <button class="cat" data-category="school"><div class="cat-icon">▣</div><div><b>School & Work</b><span>Useful for studying & working</span></div><div class="arrow">›</div></button>
-        <button class="cat" data-category="relationships"><div class="cat-icon">♡</div><div><b>Relationships</b><span>Friends, family & dating</span></div><div class="arrow">›</div></button>
-        <button class="cat" data-category="advanced"><div class="cat-icon">★</div><div><b>Advanced</b><span>For fluent speakers</span></div><div class="arrow">›</div></button>
+        <button class="cat" data-category="relationships"><div class="cat-icon">♡</div><div><b>Friends & People</b><span>Social expressions</span></div><div class="arrow">›</div></button>
+        <button class="cat" data-category="advanced"><div class="cat-icon">★</div><div><b>Modern Phrases</b><span>Idioms & fluent expressions</span></div><div class="arrow">›</div></button>
       </div>
       <button class="try" id="tryChat" type="button"><div class="big">S</div><div><b>Open slang helper</b><p>Got a slang word or phrase?<br>Just ask!</p></div><div style="margin-left:auto">›</div></button>
     </aside>
@@ -183,6 +196,7 @@
 <footer id="about" class="footer">Slangify · Learn real conversational English</footer>
 
 <div class="toast" id="toast"></div>
+<script src="slang-data.js"></script>
 <script>
 const categories = {
   everyday: [
@@ -342,38 +356,103 @@ const categories = {
     {w:'not it',m:'Not good or not acceptable.',k:'Жақсы емес; жарамайды.',e:'“That answer is not it.”',p:'Advanced'}
   ]
 };
+
+Object.entries(window.EXTRA_SLANG || {}).forEach(([key, items]) => {
+  const combined=[...(categories[key] || []), ...items];
+  const seen=new Set();
+  categories[key]=combined.filter(item=>{
+    const id=item.w.trim().toLowerCase();
+    if(seen.has(id))return false;
+    seen.add(id);return true;
+  });
+});
+
 let currentCategory='everyday';
 const INITIAL_LIMIT=16;
 let expanded=false;
 const cards = document.getElementById('cards');
 const viewAll=document.getElementById('viewAll');
+const slangSearch=document.getElementById('slangSearch');
+const clearSearch=document.getElementById('clearSearch');
+const resultMeta=document.getElementById('resultMeta');
+const sectionTitle=document.querySelector('.section-title');
+const sectionSub=document.querySelector('.section-sub');
+const allItems=Object.entries(categories).flatMap(([category,items])=>items.map(item=>({...item,category})));
+const uniqueCount=new Set(allItems.map(item=>item.w.toLowerCase())).size;
+document.getElementById('termCount').textContent=uniqueCount;
+
+document.querySelectorAll('.cat').forEach(cat=>{
+  const count=categories[cat.dataset.category]?.length || 0;
+  cat.querySelector('span').textContent=`${count} words and phrases`;
+});
+
 function renderCards(list){
   cards.innerHTML='';
+  if(!list.length){
+    cards.innerHTML='<div class="empty-state"><b>No exact match yet</b>Try a shorter word, another spelling, or select a category.</div>';
+    return;
+  }
+  const fragment=document.createDocumentFragment();
   list.forEach(x=>{
     const el=document.createElement('button'); el.className='card'; el.type='button';
-    el.innerHTML=`<span class="word">${x.w}</span>
-      <div class="lang-row" lang="en">${x.m}</div>
-      <div class="lang-row kz" lang="kk">${x.k||translateShort(x.w)}</div>
-      <div class="example">${x.e}</div><span class="pill">${x.p}</span>`;
+    el.innerHTML=`<span class="word">${escapeHtml(x.w)}</span>
+      <div class="lang-row" lang="en">${escapeHtml(x.m)}</div>
+      <div class="lang-row kz" lang="kk">${escapeHtml(x.k||translateShort(x.w))}</div>
+      <div class="example">${escapeHtml(x.e||'')}</div><span class="pill">${escapeHtml(x.p)}</span>`;
     el.addEventListener('click',()=>{ask(`Explain ${x.w}`);document.getElementById('chat').scrollIntoView({behavior:'smooth',block:'center'});});
-    cards.appendChild(el);
+    fragment.appendChild(el);
   });
+  cards.appendChild(fragment);
 }
-renderCards(categories[currentCategory].slice(0,INITIAL_LIMIT));
+
+function showCategory(scroll=false){
+  const current=categories[currentCategory];
+  slangSearch.value='';clearSearch.classList.remove('show');
+  renderCards(expanded?current:current.slice(0,INITIAL_LIMIT));
+  const active=document.querySelector(`.cat[data-category="${currentCategory}"]`);
+  sectionTitle.textContent=active?.querySelector('b').textContent || 'Slang Dictionary';
+  sectionSub.textContent=expanded
+    ?`Showing all ${current.length} words from this category.`
+    :`Showing ${Math.min(INITIAL_LIMIT,current.length)} popular entries. Choose View all for the full topic.`;
+  resultMeta.textContent=`${current.length} entries in this topic`;
+  viewAll.hidden=false;
+  viewAll.textContent=expanded?'Show less ↑':`View all ${current.length} →`;
+  viewAll.setAttribute('aria-expanded',String(expanded));
+  if(scroll)document.getElementById('dictionary').scrollIntoView({behavior:'smooth',block:'start'});
+}
+showCategory();
 
 document.querySelectorAll('.cat').forEach(cat=>cat.addEventListener('click',()=>{
   currentCategory=cat.dataset.category;
   expanded=false;
   document.querySelectorAll('.cat').forEach(c=>c.classList.remove('active'));
   cat.classList.add('active');
-  renderCards(categories[currentCategory].slice(0,INITIAL_LIMIT));
-  viewAll.textContent=`View all ${categories[currentCategory].length} →`;
-  viewAll.setAttribute('aria-expanded','false');
-  document.querySelector('.section-title').textContent=cat.querySelector('b').textContent;
-  document.querySelector('.section-sub').textContent='Useful slang and expressions from this category.';
-  document.getElementById('dictionary').scrollIntoView({behavior:'smooth',block:'start'});
+  showCategory(true);
 }));
 document.querySelector('.cat[data-category="everyday"]').classList.add('active');
+
+function normalized(value){
+  return String(value||'').toLowerCase().normalize('NFKD').replace(/[’']/g,'').trim();
+}
+function searchAll(){
+  const q=normalized(slangSearch.value);
+  clearSearch.classList.toggle('show',Boolean(q));
+  if(!q){showCategory();return;}
+  const matches=allItems.map(item=>{
+    const word=normalized(item.w), en=normalized(item.m), kk=normalized(item.k||'');
+    let score=99;
+    if(word===q)score=0;else if(word.startsWith(q))score=1;else if(word.includes(q))score=2;
+    else if(en.includes(q)||kk.includes(q))score=3;
+    return {item,score};
+  }).filter(x=>x.score<99).sort((a,b)=>a.score-b.score||a.item.w.localeCompare(b.item.w));
+  renderCards(matches.slice(0,160).map(x=>x.item));
+  sectionTitle.textContent='Search results';
+  sectionSub.textContent=`Matches across all ${Object.keys(categories).length} topics.`;
+  resultMeta.textContent=matches.length>160?`${matches.length} matches · showing the first 160`:`${matches.length} ${matches.length===1?'match':'matches'}`;
+  viewAll.hidden=true;
+}
+slangSearch.addEventListener('input',searchAll);
+clearSearch.addEventListener('click',()=>{slangSearch.value='';showCategory();slangSearch.focus()});
 
 const prompt=document.getElementById('prompt');
 const response=document.getElementById('response');
@@ -420,13 +499,7 @@ function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':
 // Make the remaining interface controls interactive.
 viewAll.addEventListener('click',()=>{
   expanded=!expanded;
-  const current=categories[currentCategory];
-  renderCards(expanded?current:current.slice(0,INITIAL_LIMIT));
-  viewAll.textContent=expanded?'Show less ↑':`View all ${current.length} →`;
-  viewAll.setAttribute('aria-expanded',String(expanded));
-  document.querySelector('.section-sub').textContent=expanded
-    ?`Showing all ${current.length} words from this category.`
-    :'Useful slang and expressions from this category.';
+  showCategory();
 });
 
 document.getElementById('tryChat').addEventListener('click',()=>{
