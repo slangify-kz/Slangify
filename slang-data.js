@@ -464,4 +464,171 @@ reality check|A reminder of the real situation.|Шынайы жағдайды е
 sneak peek|A short early preview.|Алдын ала қысқа көрсетілім.|“Here’s a sneak peek.”
 `,),
   };
+
+  const MORE_SLANG = {
+    texting: rows('Text & Abbreviations', `
+AYT|Are you there?|Осындасың ба?|“AYT? The call is starting.”
+CMIIW|Correct me if I’m wrong.|Қателессем, түзет.|“CMIIW, but the deadline is Friday.”
+ELI5|Explain it in a very simple way.|Өте қарапайым етіп түсіндір.|“Can someone ELI5 this rule?”
+FTFY|Fixed that for you.|Сен үшін түзетіп қойдым.|“I corrected the title—FTFY.”
+HTH|Hope this helps.|Бұл көмектеседі деп үміттенемін.|“Here are my notes. HTH!”
+ICYDK|In case you didn’t know.|Білмеген болсаң деп айтайын.|“ICYDK, practice starts at four.”
+IDM|I don’t mind.|Қарсы емеспін.|“We can meet later, IDM.”
+JIC|Just in case.|Сақтық үшін.|“Bring a charger JIC.”
+L8R|Later.|Кейін.|“I’ll finish it L8R.”
+MFW|My face when; used before a reaction image.|Бір жағдайдағы бет әлпетімді көрсететін жазу.|“MFW the teacher says no homework.”
+MRW|My reaction when.|Бір жағдайға реакциям.|“MRW our team wins.”
+OML|Oh my lord; a surprised reaction.|Таңдану реакциясы.|“OML, that result is amazing.”
+OTW|On the way.|Жолда.|“I’m OTW to practice.”
+PSA|An important public reminder or announcement.|Маңызды қоғамдық ескерту не хабарлама.|“PSA: the library closes early.”
+S/O|Shout-out; a public mention or praise.|Көпшілік алдында атап, мақтау.|“S/O to everyone who helped.”
+TIL|Today I learned.|Бүгін білгенім.|“TIL that this word has two meanings.”
+TMB|Text me back.|Маған жауап жаз.|“TMB when you are free.”
+TTYS|Talk to you soon.|Жақында сөйлесеміз.|“I have class now, TTYS.”
+WBU|What about you?|Ал сен ше?|“I chose blue. WBU?”
+WYM|What do you mean?|Не айтқың келеді?|“WYM? I sent the file.”
+YKWIM|You know what I mean.|Не айтқым келгенін түсінесің.|“It felt unusual, YKWIM?”
+YMMV|Your experience may be different.|Сенің тәжірибең басқаша болуы мүмкін.|“This method worked for me, but YMMV.”
+JSYK|Just so you know.|Біліп жүрсін деп айтайын.|“JSYK, the room has changed.”
+MIA|Temporarily absent or hard to contact.|Біраз уақыт көрінбей не байланысқа шықпай кеткен.|“I was MIA during exam week.”
+NTS|Note to self.|Өзіме ескерту.|“NTS: save the document first.”
+TMRW|Tomorrow.|Ертең.|“See you TMRW.”
+`),
+
+    spoken: rows('Spoken English', `
+all set|Ready, or needing nothing else.|Дайын; басқа ештеңе қажет емес.|“I’m all set for the presentation.”
+no kidding|Really, or I strongly agree.|Рас па; шынымен келісемін.|“No kidding, that test was difficult.”
+give me a shout|Contact me or tell me.|Маған хабарлас.|“Give me a shout when you arrive.”
+my treat|I will pay for it.|Ақысын мен төлеймін.|“Lunch is my treat today.”
+I got this|I can handle this task.|Мен мұны орындай аламын.|“Don’t worry, I got this.”
+no rush|There is no need to hurry.|Асығудың қажеті жоқ.|“Reply later—no rush.”
+hang tight|Wait patiently for a short time.|Сәл шыдап күте тұр.|“Hang tight, I’ll check.”
+come again?|Please repeat what you said.|Қайта айтып жіберші.|“Come again? I didn’t hear you.”
+get outta here|A playful reaction of surprise or disbelief.|Таңдану не сенбеу реакциясы.|“Get outta here—you really won?”
+I’m beat|I’m very tired.|Мен қатты шаршадым.|“After practice, I’m beat.”
+I’m in|I agree to join.|Мен қатысамын.|“A study session? I’m in.”
+I’m out|I’m leaving or not joining.|Мен кетемін не қатыспаймын.|“It’s late, so I’m out.”
+good call|That was a good decision.|Бұл жақсы шешім болды.|“Taking notes was a good call.”
+tell me about it|I strongly agree about a difficult situation.|Қиын жағдай туралы толық келісемін.|“It was a long day.” — “Tell me about it.”
+`),
+
+    internet: rows('Internet Culture', `
+chronically online|Spending so much time online that it shapes your behavior.|Интернетте тым көп болып, соның әсерінде жүру.|“That reference is very chronically online.”
+doomposting|Posting very pessimistic predictions or news.|Өте пессимистік болжамдар не жаңалықтар жариялау.|“The thread turned into doomposting.”
+vaguepost|Post a vague hint without giving details.|Мән-жайды айтпай, түсініксіз ишара жариялау.|“That vaguepost made everyone curious.”
+quote-tweet|Share a post again with your own comment.|Жазбаны өз пікіріңмен бірге қайта жариялау.|“She added context in a quote-tweet.”
+reply chain|A connected series of replies.|Бір-бірімен байланысқан жауаптар тізбегі.|“The answer is deep in the reply chain.”
+engagement bait|Content designed mainly to attract reactions and comments.|Реакция мен пікір жинау үшін жасалған контент.|“That question looks like engagement bait.”
+content farm|A source producing lots of low-quality content quickly.|Көп әрі сапасы төмен контентті тез шығаратын ресурс.|“The page felt like a content farm.”
+filter bubble|A limited online view caused by personalized recommendations.|Жеке ұсыныстардан пайда болатын шектеулі ақпарат ортасы.|“A filter bubble can hide other opinions.”
+echo chamber|An online space where the same views are repeated.|Бірдей пікірлер ғана қайталанатын интернет ортасы.|“The group became an echo chamber.”
+parasocial|Describing a one-sided bond with a public figure or creator.|Танымал адаммен біржақты байланыс сезімі.|“Viewers can form a parasocial connection.”
+moots|People who follow each other online.|Бір-біріне жазылған қолданушылар.|“I asked my moots for ideas.”
+soft block|Block and unblock someone to remove them as a follower.|Жазылушыдан алып тастау үшін бұғаттап, қайта ашу.|“He used a soft block to remove the account.”
+digital footprint|The lasting record of someone’s online activity.|Адамның интернеттегі әрекеттерінен қалатын із.|“Think before posting because of your digital footprint.”
+rage scrolling|Keep viewing content that makes you angry.|Ашуландыратын контентті қарай беріп қою.|“I stopped rage scrolling and closed the app.”
+`),
+
+    everyday: rows('Everyday', `
+bougie|Fancy or showing expensive taste.|Сәнді не қымбат талғамды көрсететін.|“That café looks bougie.”
+drip|Stylish clothes or personal style.|Сәнді киім не стиль.|“His new jacket has serious drip.”
+fit|An outfit or set of clothes.|Киім үлгісі.|“That fit looks great.”
+gucci|Good, fine, or under control.|Жақсы; бәрі дұрыс.|“We finished the task, so we’re gucci.”
+hella|Very or a lot; highly informal.|Өте не көп; өте бейресми сөз.|“That game was hella fun.”
+janky|Poorly made, unreliable, or awkward.|Сапасыз, сенімсіз не ыңғайсыз.|“The old keyboard is janky.”
+deadass|Seriously or honestly; very informal.|Шынымен; өте бейресми сөз.|“Deadass, that was my best score.”
+word|I agree or understand.|Келісемін не түсіндім.|“Meet at five?” — “Word.”
+wack|Bad, strange, or unfair.|Жаман, оғаш не әділетсіз.|“That rule is wack.”
+banger|Something excellent, especially a song.|Өте керемет нәрсе, әсіресе ән.|“This track is a banger.”
+bop|A catchy and enjoyable song.|Ырғағы есте қалатын жақсы ән.|“That new song is a bop.”
+stoked|Very excited and happy.|Қатты қуанып, асыға күту.|“I’m stoked for the tournament.”
+hangry|Irritable because you are hungry.|Қарны ашқандықтан ашулану.|“I skipped my snack and got hangry.”
+zonked|Extremely tired.|Өте қатты шаршаған.|“After the trip, I was zonked.”
+`),
+
+    gaming: rows('Gaming', `
+debuff|An effect that makes a character weaker.|Кейіпкерді әлсірететін әсер.|“The spell adds a debuff.”
+hitbox|The game area that registers a hit.|Соққыны тіркейтін ойын аумағы.|“That character has a small hitbox.”
+gank|Surprise an opponent, often with several players.|Қарсыласқа көбіне бірнеше ойыншымен тосыннан шабуылдау.|“They tried to gank our teammate.”
+griefing|Intentionally ruining the game for other players.|Басқа ойыншылардың ойынын әдейі бұзу.|“The server has rules against griefing.”
+kiting|Keep an enemy at a distance while moving and attacking.|Қозғалып шабуылдап, қарсыласты алыста ұстау.|“Kiting helped us beat the boss.”
+mob|A computer-controlled enemy in a game.|Компьютер басқаратын ойын қарсыласы.|“A group of mobs appeared nearby.”
+permadeath|A mode where a defeated character cannot return.|Жеңілген кейіпкер қайта оралмайтын режим.|“This game has an optional permadeath mode.”
+proc|An effect that activates under certain conditions.|Белгілі жағдайда іске қосылатын әсер.|“The bonus can proc after a hit.”
+raid|A large team mission against difficult challenges.|Күрделі тапсырмаға арналған үлкен командалық миссия.|“Our team completed the raid.”
+spawn kill|Defeat a player immediately after they reappear.|Ойыншы қайта пайда болған сәтте оны жеңу.|“The server prevents spawn kill tactics.”
+stun lock|Keep an opponent unable to act with repeated effects.|Қайталанған әсермен қарсыласты қимылдатпау.|“The combo created a stun lock.”
+glass cannon|A character with high damage but weak defense.|Шабуылы күшті, қорғанысы әлсіз кейіпкер.|“That build is a glass cannon.”
+min-max|Optimize a character by maximizing useful stats.|Пайдалы көрсеткіштерді барынша арттырып оңтайландыру.|“He likes to min-max every build.”
+theorycraft|Plan and compare strategies using game mechanics.|Ойын механикасына сүйеніп стратегия құру және салыстыру.|“Players theorycraft before the update.”
+`),
+
+    social: rows('Social Media', `
+OOTD|Outfit of the day.|Күннің киім үлгісі.|“Here is my OOTD.”
+GRWM|Get ready with me; a common video format.|Менімен бірге дайындал; танымал видео форматы.|“She posted a GRWM before school.”
+fit check|A post or moment showing an outfit.|Киім үлгісін көрсететін жазба не сәт.|“Quick fit check before we leave.”
+micro-influencer|A creator with a smaller, focused audience.|Шағын әрі белгілі аудиториясы бар контент авторы.|“A micro-influencer reviewed the app.”
+deinfluencing|Content advising people not to buy overhyped products.|Артық мақталған тауарды алмауға кеңес беретін контент.|“Her deinfluencing video compared cheaper options.”
+hate-watch|Watch something despite strongly disliking it.|Ұнатпаса да бір нәрсені әдейі көру.|“They hate-watch the show every week.”
+callout post|A public post pointing out a problem or behavior.|Мәселе не әрекетті ашық көрсететін жазба.|“The creator shared a careful callout post.”
+flop era|A period when someone or something performs poorly.|Нәтиже не танымалдық төмендеген кезең.|“The channel joked about its flop era.”
+lore drop|New background information about a person or story.|Адам не оқиға туралы жаңа қосымша мәлімет.|“That interview was a major lore drop.”
+soft post|A post that subtly hints at news without fully revealing it.|Жаңалықты толық ашпай, ақырын ишаралайтын жазба.|“The photo was a soft post about the project.”
+spam account|A secondary account for casual or frequent posts.|Еркін әрі жиі жазба салуға арналған қосымша аккаунт.|“She shares random photos on her spam account.”
+meme dump|A collection of memes shared together.|Бірге жарияланған мемдер жинағы.|“He sent a weekend meme dump.”
+comment bait|A post designed mainly to attract many replies.|Көп жауап жинау үшін жасалған жазба.|“That caption is obvious comment bait.”
+story arc|A connected sequence of posts that forms a continuing story.|Жалғасатын оқиға құрайтын жазбалар тізбегі.|“The travel posts became a full story arc.”
+`),
+
+    school: rows('School & Work', `
+EOW|End of week.|Аптаның соңы.|“Please share the draft by EOW.”
+EOM|End of message or end of month, depending on context.|Контекстке қарай хабарламаның не айдың соңы.|“Schedule confirmed, EOM.”
+NRN|No reply necessary.|Жауап берудің қажеті жоқ.|“The file is attached, NRN.”
+N/A|Not applicable or not available.|Қолданылмайды не қолжетімсіз.|“Write N/A if the question does not apply.”
+RTO|Return to office.|Кеңсеге қайта оралу.|“The team discussed its RTO schedule.”
+action item|A specific task agreed during a meeting.|Кездесуде келісілген нақты тапсырма.|“My action item is to update the slides.”
+blocker|A problem stopping progress.|Жұмыстың жүруіне кедергі болатын мәселе.|“A missing file is our only blocker.”
+deliverable|A result or piece of work that must be submitted.|Тапсырылуы керек жұмыс нәтижесі.|“The final report is the deliverable.”
+hard stop|A fixed time when someone must leave or finish.|Адам кетуі не аяқтауы тиіс нақты уақыт.|“I have a hard stop at five.”
+heads down|Fully focused and temporarily unavailable.|Толық зейін қойып, уақытша бос емес.|“I’ll be heads down until lunch.”
+keep me posted|Continue giving me updates.|Маған жаңалықтарды айтып отыр.|“Keep me posted about the project.”
+low-hanging fruit|The easiest useful task or opportunity.|Ең оңай әрі пайдалы тапсырма не мүмкіндік.|“Let’s start with the low-hanging fruit.”
+move the needle|Make a noticeable difference or progress.|Айтарлықтай өзгеріс не ілгерілеу жасау.|“Daily practice will move the needle.”
+take it offline|Discuss something separately outside the current meeting or chat.|Мәселені осы кездесуден не чаттан бөлек талқылау.|“Let’s take it offline after the meeting.”
+`),
+
+    relationships: rows('Friends & People', `
+day one|A loyal friend you have known for a long time.|Көптен бері білетін адал дос.|“He has been my day one since primary school.”
+real one|A genuinely loyal and reliable person.|Шынайы адал әрі сенімді адам.|“Thanks for helping—you’re a real one.”
+frenemy|Someone who acts like both a friend and a rival.|Бір уақытта дос та, бәсекелес те сияқты адам.|“My frenemy always turns homework into a competition.”
+flaky|Often cancelling plans or being unreliable.|Жоспардан жиі бас тартып, сенімсіз болу.|“Don’t be flaky—tell us early.”
+no-show|A person who does not arrive as planned.|Келуге уәде беріп, келмеген адам.|“The last player was a no-show.”
+two-faced|Friendly in person but unkind behind someone’s back.|Бетпе-бет жақсы болып, сыртынан жаман сөйлейтін.|“A two-faced friend is hard to trust.”
+social butterfly|Someone who enjoys meeting and talking to many people.|Көп адаммен танысып, сөйлескенді ұнататын адам.|“She is a social butterfly at school events.”
+homebody|Someone who prefers spending time at home.|Үйде уақыт өткізгенді ұнататын адам.|“I’m a homebody on quiet weekends.”
+group chat|A shared message conversation with several people.|Бірнеше адамға ортақ хабарлама чаты.|“Ask everyone in the group chat.”
+GC|Group chat.|Топтық чат.|“Send the photo to the GC.”
+plus-one|A guest invited to come with another person.|Басқа адаммен бірге шақырылған қонақ.|“You can bring a plus-one to the event.”
+friend zone|A situation where one person wants romance but the other wants friendship.|Бір адам сезім білдіріп, екіншісі тек достықты қалайтын жағдай.|“They talked honestly about the friend zone.”
+`),
+
+    advanced: rows('Modern Phrases', `
+caught in 4K|Caught doing something with very clear evidence.|Айқын дәлелмен ұсталып қалу.|“He was caught in 4K by the screenshot.”
+make it make sense|Explain something that seems confusing or illogical.|Түсініксіз не қисынсыз нәрсені түсіндір.|“These instructions conflict—make it make sense.”
+it’s not that deep|The situation is not as serious or complicated as it seems.|Жағдай көрінгендей күрделі не маңызды емес.|“Relax, it’s not that deep.”
+the math isn’t mathing|The facts or numbers do not seem logical.|Фактілер не сандар қисынға келмей тұр.|“The total is wrong—the math isn’t mathing.”
+chef’s kiss|Perfectly done or especially good.|Мінсіз жасалған не ерекше жақсы.|“That final animation is chef’s kiss.”
+mic drop|An impressive final statement or action.|Әсерлі соңғы сөз не әрекет.|“Her final point was a mic drop.”
+zero notes|So good that no criticism is needed.|Сын айтудың қажеті жоқтай өте жақсы.|“The presentation was clear—zero notes.”
+that tracks|That fits what was expected or already known.|Бұл күтілген нәрсеге сай келеді.|“He practiced daily? That tracks.”
+checks out|Seems correct, believable, or consistent.|Дұрыс, сенімді не үйлесімді көрінеді.|“I checked the dates; the story checks out.”
+be so for real|A strong request to be honest or realistic.|Шындықты айтуды не шынайы болуды қатты сұрау.|“Be so for real—that cannot take one minute.”
+standing on business|Taking your promises, claims, or responsibilities seriously.|Уәдеңе, сөзіңе не міндетіңе байыппен қарау.|“She finished every task and was standing on business.”
+caught lacking|Found unprepared or not paying attention.|Дайын емес не назарсыз кезде ұсталып қалу.|“I was caught lacking on the surprise quiz.”
+`)
+  };
+
+  Object.entries(MORE_SLANG).forEach(([key, items]) => {
+    window.EXTRA_SLANG[key] = [...(window.EXTRA_SLANG[key] || []), ...items];
+  });
 })();
