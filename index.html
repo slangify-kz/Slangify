@@ -608,6 +608,26 @@ function optionSet(correct,candidates,count=4){
   });
   return shuffle([correct,...distractors]);
 }
+function balanceAnswerPositions(source){
+  const result=[...source];
+  const groups=new Map();
+  result.forEach((question,index)=>{
+    const size=question.options.length;
+    if(!groups.has(size))groups.set(size,[]);
+    groups.get(size).push(index);
+  });
+  groups.forEach((indices,size)=>{
+    const positions=shuffle(indices.map((unused,index)=>index%size));
+    indices.forEach((questionIndex,index)=>{
+      const question=result[questionIndex];
+      const distractors=shuffle(question.options.filter(option=>option!==question.correct));
+      const arranged=[...distractors];
+      arranged.splice(positions[index],0,question.correct);
+      question.options=arranged;
+    });
+  });
+  return result;
+}
 function otherItem(item,pool){
   return shuffle(pool.filter(x=>normalized(x.w)!==normalized(item.w)))[0]||item;
 }
@@ -650,7 +670,7 @@ function makeQuestion(item,type,pool){
   }
 }
 function beginQuiz(newQuestions,modeLabel){
-  questions=newQuestions;questionIndex=0;practiceScore=0;missedWords=[];
+  questions=balanceAnswerPositions(newQuestions);questionIndex=0;practiceScore=0;missedWords=[];
   practiceWelcome.hidden=true;quizResult.hidden=true;quizShell.hidden=false;
   quizMode.textContent=modeLabel;
   renderQuestion();
