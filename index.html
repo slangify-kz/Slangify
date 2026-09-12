@@ -154,7 +154,7 @@
     --pixel-green:#31ad75;
     --pixel-red:#d94d62;
   }
-  *{border-radius:0!important}
+  /* Pixel details are used as accents, while the main interface stays modern. */
   body{
     color:var(--pixel-ink);
     background-color:var(--pixel-bg);
@@ -188,7 +188,7 @@
     color:#fff;font-size:19px;font-weight:900;line-height:1;
   }
   .tagline{color:var(--pixel-muted);font-size:11px;font-weight:700}
-  .tagline::before{content:"PIXEL EDITION // ";color:#9b32b4;font-weight:900}
+  .tagline::before{content:""}
   nav{color:#43527a;font-size:12px;font-weight:800;gap:28px}
   nav a{padding-block:25px}
   nav a.active{color:var(--pixel-purple)}
@@ -492,6 +492,275 @@
     body.alt-theme h1{text-shadow:4px 4px 0 #26346b}
     body.alt-theme .helper-card,body.alt-theme .practice-panel{box-shadow:6px 6px 0 #070b1e}
   }
+
+  /* Modern layout with subtle pixel accents */
+  body{
+    color:#17233d;
+    background:
+      radial-gradient(circle at 88% 8%,rgba(133,99,244,.14),transparent 28%),
+      radial-gradient(circle at 10% 26%,rgba(63,174,232,.10),transparent 24%),
+      linear-gradient(180deg,#f7f9ff 0%,#eef3fc 100%);
+    font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  }
+  .topbar{
+    height:67px;background:rgba(255,255,255,.9);backdrop-filter:blur(14px);
+    border-bottom:1px solid #dfe6f2;box-shadow:0 8px 26px rgba(49,63,104,.07);
+  }
+  .brand{font-size:23px;letter-spacing:-.4px}
+  .brand-mark{
+    width:32px;height:32px;border:0;border-radius:9px!important;
+    background:linear-gradient(135deg,#5478e9,#8b5be1);
+    box-shadow:3px 3px 0 rgba(71,87,151,.2);
+  }
+  .brand-mark::before{font-family:"Courier New",monospace;font-size:18px}
+  .tagline{font-size:12px;font-weight:600}
+  nav{font-size:13px;font-weight:600;gap:30px}
+  nav a{padding-block:22px}
+  nav a.active::after{height:3px;border-radius:3px;box-shadow:none}
+  .moon,.signin,.mobile-practice,.mobile-about{
+    border:1px solid #dbe3f2!important;border-radius:11px!important;
+    background:#fff;color:#31405f;box-shadow:0 5px 14px rgba(47,61,103,.08);
+  }
+  .moon:hover,.signin:hover,.mobile-practice:hover,.mobile-about:hover{transform:translateY(-1px);box-shadow:0 8px 18px rgba(47,61,103,.12)}
+  .moon:active,.signin:active,.mobile-practice:active,.mobile-about:active{transform:none;box-shadow:0 3px 8px rgba(47,61,103,.08)}
+  .mobile-about{display:none;align-items:center;justify-content:center;min-height:38px;padding:0 11px;font-size:11px;font-weight:800}
+
+  .hero{padding:58px 0 48px;gap:64px}
+  .hero::before{
+    inset:15px -4vw auto auto;width:420px;height:330px;
+    background:radial-gradient(circle,rgba(96,104,235,.13),transparent 64%);
+    box-shadow:none;border-radius:50%;opacity:1;
+  }
+  h1{letter-spacing:-3.2px;text-shadow:none}
+  .hero-copy{color:#63708a;font-size:16px;font-weight:400;line-height:1.7}
+  .feature{color:#44516c;font-size:12px;font-weight:500}
+  .feature .i{
+    width:35px;height:35px;border:1px solid #d9e3f8;border-radius:10px!important;
+    background:#edf2ff;color:#5a72dc;box-shadow:none;
+  }
+
+  .helper-card{
+    padding:25px;border:1px solid rgba(100,124,205,.4);border-radius:22px!important;
+    background:linear-gradient(145deg,#29457f,#1c2e59);
+    box-shadow:0 24px 65px rgba(38,52,98,.23);
+  }
+  .helper-card::after{opacity:.38}
+  .helper-header{font-size:16px;text-transform:none;letter-spacing:0}
+  .bot{
+    width:38px;height:38px;border:0;border-radius:10px!important;
+    background:linear-gradient(135deg,#f7c94b,#ffd96f);box-shadow:3px 3px 0 rgba(13,27,62,.35);
+  }
+  .composer{
+    padding:10px 12px;background:#fff;border:1px solid #8197d4;
+    border-radius:16px!important;box-shadow:none;
+  }
+  .composer:focus-within{border-color:#9caef1;box-shadow:0 0 0 3px rgba(125,145,225,.16)}
+  .send{
+    border:0;border-radius:12px!important;background:linear-gradient(135deg,#5b75e8,#845ed7);
+    color:#fff;box-shadow:0 8px 18px rgba(48,65,138,.25);
+  }
+  .send:hover{transform:translateY(-1px);box-shadow:0 10px 22px rgba(48,65,138,.3)}
+  .send:active{transform:none;box-shadow:0 5px 12px rgba(48,65,138,.22)}
+  .chip{
+    border:1px solid rgba(168,187,241,.34);border-radius:999px!important;
+    background:rgba(255,255,255,.09);box-shadow:none;font-size:11px;font-weight:600;
+  }
+  .chip:hover{background:rgba(255,255,255,.15);border-color:#b8c9f2}
+  .avatar{border:0;border-radius:9px!important}
+  .bubble{
+    border:1px solid #dae3f4;border-radius:14px 14px 14px 4px!important;
+    background:#fff;color:#26344f;box-shadow:0 9px 24px rgba(18,31,67,.13);
+  }
+
+  .main{border-top:1px solid #dde5f1;padding-top:50px;gap:25px}
+  .section-title,.side-title,.practice-title,.result-title{
+    letter-spacing:-.7px;text-transform:none;
+  }
+  .section-title{font-size:28px;text-shadow:none}
+  .section-title small{font-size:28px}
+  .viewall{
+    padding:9px 13px;border:0;border-radius:10px!important;
+    background:#edf1ff;color:#506cda;box-shadow:none;
+  }
+  .viewall:hover{transform:none;background:#e4eaff;box-shadow:none}
+  .search-shell{
+    padding:7px 8px 7px 14px;border:1px solid #d9e2f3;border-radius:15px!important;
+    background:#fff;box-shadow:0 7px 22px rgba(57,73,116,.07);
+  }
+  .clear-search{border:0;border-radius:10px!important;background:#edf2ff;color:#4567db}
+  .empty-state{
+    border:1px dashed #cfd9eb;border-radius:16px!important;background:rgba(255,255,255,.8);
+    box-shadow:none;
+  }
+  .cards{gap:14px}
+  .card{
+    min-height:230px;padding:18px;border:1px solid #dce4f2;border-radius:16px!important;
+    background:#fff;box-shadow:0 8px 24px rgba(57,73,116,.07);
+  }
+  .card:hover{transform:translateY(-3px);border-color:#9aade8;box-shadow:0 14px 32px rgba(57,73,116,.13)}
+  .word{
+    border:0;border-radius:8px!important;box-shadow:none;padding:7px 12px;
+    letter-spacing:0;font-size:14px;
+  }
+  .pill{border:0;border-radius:20px!important;background:#eaf0ff;color:#4668e8}
+  .card-action{
+    border:1px solid #dbe4f5;border-radius:10px!important;
+    background:#f6f8ff;color:#4661bb;box-shadow:none;
+  }
+  .card-action:hover{transform:none;border-color:#9eafe8;background:#edf2ff}
+  .card-action.practice-word{border-color:#607fe6;background:#5b75dd}
+
+  .categories{gap:8px}
+  .cat{
+    padding:11px 12px;border:1px solid #dfe6f4;border-radius:13px!important;
+    background:#fff;box-shadow:none;
+  }
+  .cat:hover,.cat.active{
+    transform:translateX(2px);border-color:#8da6ed;background:#f1f5ff;
+    box-shadow:none;
+  }
+  .cat-icon{
+    border:0;border-radius:10px!important;background:#eaf0ff;color:#5275e8;
+  }
+  .cat b{font-size:12px}.cat span{font-size:10px}
+  .try{
+    border:1px solid rgba(129,137,225,.45);border-radius:15px!important;
+    background:linear-gradient(135deg,#4770e9,#855dd6);box-shadow:none;
+  }
+  .try .big{border:0;border-radius:11px!important;background:rgba(255,255,255,.14);color:#fff}
+  .tip{
+    border:1px solid #dfe6f4;border-radius:12px!important;
+    background:#fff;box-shadow:none;font-size:11px;
+  }
+
+  .practice-panel{
+    padding:24px;border:1px solid #dce4f5;border-radius:22px!important;
+    background:linear-gradient(145deg,#fff,#f5f7ff);
+    box-shadow:0 16px 45px rgba(57,73,116,.10);
+  }
+  .practice-panel::after{opacity:.32}
+  .practice-title{font-size:25px}
+  .practice-select{
+    border:1px solid #d6e0f2;border-radius:12px!important;background:#fff;
+    color:#26344f;box-shadow:none;font-weight:600;
+  }
+  .start-quiz,.next-question,.result-restart{
+    border:0;border-radius:12px!important;background:linear-gradient(135deg,#4b72e5,#805bd7);
+    box-shadow:0 9px 20px rgba(77,102,210,.22);
+  }
+  .start-quiz:hover,.next-question:hover,.result-restart:hover{transform:translateY(-1px);box-shadow:0 12px 24px rgba(77,102,210,.27)}
+  .practice-stat{
+    border:1px solid #e0e6f3;border-radius:14px!important;
+    background:rgba(255,255,255,.75);box-shadow:none;
+  }
+  .quiz-shell,.quiz-result{border-top:1px solid #e2e8f4}
+  .progress-track{height:7px;border:0;border-radius:10px!important;background:#e6ebf7}
+  .progress-bar{border-radius:inherit!important;background:linear-gradient(90deg,#4c76e8,#9860dd)}
+  .quiz-mode{border:0;border-radius:20px!important;background:#ebf0ff;color:#506ed4}
+  .quiz-detail{
+    border:0;border-left:3px solid #7089e7;border-radius:0 11px 11px 0!important;
+    background:#f4f6ff;color:#52627f;
+  }
+  .answer-option{
+    border:1px solid #dae3f3;border-radius:12px!important;
+    background:#fff;color:#293650;box-shadow:none;
+  }
+  .answer-option:hover:not(:disabled){transform:translateY(-1px);border-color:#8ea6ef;background:#f6f8ff}
+  .quiz-feedback{border:1px solid!important;border-radius:12px!important;box-shadow:none}
+  .result-ring{
+    border:0;border-radius:50%!important;box-shadow:none;
+    background:conic-gradient(#5d7de7 var(--score-angle,0deg),#e8edf7 0);
+  }
+  .result-ring::after{border-radius:50%!important}
+  .missed-chip{border:0;border-radius:18px!important}
+  .toast{border:0;border-radius:12px!important;box-shadow:0 12px 32px rgba(26,39,72,.25)}
+  .footer{border-top:1px solid #dfe6f2;color:#7886a0;font-weight:500}
+
+  .about-section{scroll-margin-top:86px;padding:70px 0;background:rgba(255,255,255,.55);border-top:1px solid #dfe6f2}
+  .about-inner{display:grid;grid-template-columns:minmax(0,1fr) minmax(360px,.9fr);gap:58px;align-items:center}
+  .about-kicker{
+    display:inline-flex;margin-bottom:13px;color:#5a70d5;font-size:11px;
+    font-weight:850;letter-spacing:.12em;text-transform:uppercase;
+  }
+  .about-heading h2{margin:0 0 16px;color:#1d2a45;font-size:clamp(30px,3.4vw,45px);line-height:1.08;letter-spacing:-1.8px}
+  .about-heading p{max-width:700px;margin:0;color:#5f6d86;font-size:14px;line-height:1.75}
+  .about-heading .about-kz{margin-top:15px;padding-left:15px;border-left:3px solid #7187e2;color:#76829a}
+  .about-points{display:grid;gap:11px}
+  .about-card{
+    display:flex;gap:14px;align-items:flex-start;padding:16px;
+    border:1px solid #dce4f2;border-radius:14px;background:#fff;
+    box-shadow:0 7px 20px rgba(57,73,116,.06);
+  }
+  .about-card>span{
+    flex:0 0 34px;width:34px;height:34px;display:grid;place-items:center;
+    border-radius:8px;background:#edf1ff;color:#526bda;
+    font-family:"Courier New",monospace;font-size:11px;font-weight:900;
+  }
+  .about-card b{display:block;color:#26344f;font-size:13px;margin:1px 0 4px}
+  .about-card p{margin:0;color:#77849b;font-size:11px;line-height:1.5}
+
+  body.alt-theme{
+    color:#f5f7ff;
+    background:
+      radial-gradient(circle at 88% 8%,rgba(118,87,232,.16),transparent 28%),
+      radial-gradient(circle at 10% 26%,rgba(34,184,207,.08),transparent 25%),
+      linear-gradient(180deg,#111a2e,#15213a);
+  }
+  body.alt-theme .topbar{background:rgba(17,26,46,.9);border-color:#293755;box-shadow:0 8px 26px rgba(0,0,0,.16)}
+  body.alt-theme .brand-mark,body.alt-theme .moon,body.alt-theme .mobile-practice,body.alt-theme .mobile-about{border-color:#354766;box-shadow:0 5px 14px rgba(0,0,0,.18)}
+  body.alt-theme .mobile-about{background:#22314f;color:#fff}
+  body.alt-theme h1{color:#f7f8ff;text-shadow:none}
+  body.alt-theme .feature .i{border-color:#33496f;box-shadow:none}
+  body.alt-theme .main,body.alt-theme .footer{border-color:#2a3855}
+  body.alt-theme .section-title{color:#fff;text-shadow:none}
+  body.alt-theme .card,body.alt-theme .cat,body.alt-theme .tip,body.alt-theme .practice-panel,body.alt-theme .empty-state{
+    color:#f4f6fc;background:#1c2944;border-color:#314160;
+    box-shadow:0 10px 28px rgba(0,0,0,.12);
+  }
+  body.alt-theme .card:hover,body.alt-theme .cat:hover,body.alt-theme .cat.active{
+    background:#22304d;border-color:#6079ac;box-shadow:0 14px 34px rgba(0,0,0,.18);
+  }
+  body.alt-theme .card-action,body.alt-theme .practice-stat,body.alt-theme .practice-select,body.alt-theme .answer-option{
+    color:#edf2fb;background:#22304c;border-color:#3a4b69;box-shadow:none;
+  }
+  body.alt-theme .search-shell{background:#1c2944;border-color:#354766;box-shadow:0 8px 24px rgba(0,0,0,.13)}
+  body.alt-theme .quiz-detail{color:#c6d1e5;background:#243250;border-color:#7089e7}
+  body.alt-theme .progress-track{background:#34435e;border:0}
+  body.alt-theme .result-ring{box-shadow:none}
+  body.alt-theme .about-section{background:rgba(9,16,34,.22);border-color:#2a3855}
+  body.alt-theme .about-heading h2,body.alt-theme .about-card b{color:#f4f6fc}
+  body.alt-theme .about-heading p{color:#abb8d0}
+  body.alt-theme .about-heading .about-kz{color:#9facc6;border-color:#7089e7}
+  body.alt-theme .about-card{background:#1c2944;border-color:#314160;box-shadow:0 8px 24px rgba(0,0,0,.12)}
+  body.alt-theme .about-card>span{background:#293a62;color:#cbd7ff}
+  body.alt-theme .about-card p{color:#abb8d0}
+
+  @media (max-width:900px){
+    .about-inner{grid-template-columns:1fr;gap:28px}
+  }
+  @media (max-width:680px){
+    .topbar{height:60px;border-bottom-width:1px}.top-actions{gap:7px}
+    .mobile-about{display:inline-flex}
+    .mobile-practice,.mobile-about{min-height:36px;padding-inline:8px;font-size:10px}
+    .wrap{width:min(92vw,560px)}
+    .hero{padding:36px 0 32px;gap:28px}
+    h1{font-size:38px;letter-spacing:-2px;text-shadow:none}
+    .helper-card{border-radius:18px!important;box-shadow:0 18px 44px rgba(38,52,98,.2)}
+    .main{padding-top:38px}
+    .cat{min-width:190px}.cat:hover,.cat.active{transform:none}
+    .section-title,.section-title small{font-size:24px}
+    .card{min-height:218px;box-shadow:0 7px 21px rgba(57,73,116,.07)}
+    .practice-panel{padding:18px;border-radius:18px!important;box-shadow:0 13px 38px rgba(57,73,116,.09)}
+    .practice-title{font-size:22px}
+    .about-section{padding:52px 0}
+    .about-heading h2{font-size:31px;letter-spacing:-1.2px}
+    .about-heading p{font-size:13px}
+    .about-card{padding:14px}
+    body.alt-theme .helper-card,body.alt-theme .practice-panel{box-shadow:0 16px 40px rgba(0,0,0,.18)}
+  }
+  @media (max-width:360px){
+    .mobile-practice{display:none}
+  }
 </style>
 </head>
 <body>
@@ -499,7 +768,7 @@
   <a class="brand" href="#"><span class="brand-mark"></span>Slangify</a>
   <div class="tagline">Real English. Real People.</div>
   <nav><a class="active" href="#home">Home</a><a href="#dictionary">Slang Dictionary</a><a href="#practice">Practice</a><a href="#chat">Slang Helper</a><a href="#about">About</a></nav>
-  <div class="top-actions"><a class="mobile-practice" href="#practice">Practice</a><button class="moon" aria-label="Toggle theme">◔</button></div>
+  <div class="top-actions"><a class="mobile-practice" href="#practice">Practice</a><a class="mobile-about" href="#about">About</a><button class="moon" aria-label="Toggle theme">◔</button></div>
 </header>
 
 <main id="home" class="wrap">
@@ -598,7 +867,24 @@
     </aside>
   </section>
 </main>
-<footer id="about" class="footer">Slangify · Learn real conversational English</footer>
+
+<section id="about" class="about-section">
+  <div class="wrap about-inner">
+    <div class="about-heading">
+      <span class="about-kicker">About Slangify</span>
+      <h2>Why this website was created</h2>
+      <p>Slangify was created to help English learners understand the language people actually use in messages, social media, games and everyday conversations. Its goal is to make slang, abbreviations and spoken phrases easier to learn through short explanations, clear Kazakh translations, real examples and practice tests.</p>
+      <p class="about-kz" lang="kk">Slangify ағылшын тілін үйренушілерге хабарламаларда, әлеуметтік желілерде, ойындарда және күнделікті әңгімеде қолданылатын шынайы тілді түсінуге көмектесу үшін жасалды.</p>
+    </div>
+    <div class="about-points">
+      <article class="about-card"><span>01</span><div><b>Understand real speech</b><p>Learn expressions that are often missing from traditional textbooks.</p></div></article>
+      <article class="about-card"><span>02</span><div><b>Learn with context</b><p>See a simple meaning, Kazakh translation and natural example together.</p></div></article>
+      <article class="about-card"><span>03</span><div><b>Practice and remember</b><p>Use short randomized tests to turn new slang into active vocabulary.</p></div></article>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">Slangify · Learn real conversational English</footer>
 
 <div class="toast" id="toast"></div>
 <script src="slang-data.js"></script>
