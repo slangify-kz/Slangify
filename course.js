@@ -47,6 +47,12 @@
   function beginPractice(id,mode='quick'){if(learningLock()){notify(learningLock());return}const w=S.byId(id);if(!w)return;const n=mode==='full'?10:6;const qs=p().group==='classic'?S.shuffle(Array.from({length:n},(_,i)=>S.question(w,i%2?'reverse':'meaning',Math.floor(i/2)%2))):(mode==='full'?S.practice(w):S.trainingPractice(w));quiz={id,mode,questions:qs,index:0,correct:0,wrong:[]};chosen=null;answered=false;questionMs=0;renderQuestion();window.scrollTo({top:0,behavior:'instant'})}
   function startAssessment(stage){try{S.startTest(p(),stage);save();testStage=stage;quiz=null;chosen=null;questionMs=0;answered=false;renderQuestion();window.scrollTo({top:0,behavior:'instant'})}catch(e){notify(e.message)}}
   function renderQuestion(){
+    const isTest=!!testStage;
+    const test=isTest?p()?.tests?.[testStage]:null;
+    const qs=isTest?S.assessment(p(),testStage):quiz?.questions;
+    const index=isTest?(test?.answers?.length||0):(quiz?.index||0);
+    const q=qs?.[index];
+    if(!q){notify('This question could not be opened.');return}
     const total=qs.length;
     view.innerHTML=`<div class="quiz-top"><span>${isTest?({pre:'Pre-test',post:'Post-test',delayed:'Delayed test'}[testStage]):(quiz.mode==='full'?'Full test · 10 questions':'Learning round · 6 questions')+' · '+esc(S.byId(quiz.id).word)}</span><span>${index+1} / ${total}</span></div><progress class="course-progress" value="${index}" max="${total}" aria-label="Questions answered"></progress><div class="panel question-box"><h2 id="questionTitle" tabindex="-1">${esc(q.prompt)}</h2><div class="answer-options" role="group" aria-labelledby="questionTitle">${q.options.map((o,i)=>`<button type="button" class="answer-option" data-action="choose" data-index="${i}" aria-pressed="${chosen===i}"><span>${String.fromCharCode(65+i)}</span><span>${esc(o)}</span></button>`).join('')}</div><div id="questionFeedback" aria-live="polite"></div><div class="actions">${button('submitAnswer',isTest?'Save answer & continue':answered?'Next question →':'Check answer',chosen===null?'disabled':'')}${button('pause',isTest?'Save & pause':'Back to lesson','',true)}</div>${isTest?'<p class="muted" style="font-size:13px;margin-top:18px">No hints during the test. Each submitted answer is final. Pausing saves your place.</p>':''}</div>`;
     $('questionTitle').focus({preventScroll:true});
@@ -59,7 +65,7 @@
     quiz.index++;chosen=null;answered=false;questionMs=0;
     if(quiz.index<quiz.questions.length){renderQuestion();return}
     const total=quiz.questions.length,l=p().lessons[quiz.id];l.attempts=(l.attempts||0)+1;l.best=Math.max(l.best||0,quiz.correct);if(quiz.mode==='quick'){l.quickAttempts=(l.quickAttempts||0)+1;l.quickBest=Math.max(l.quickBest||0,quiz.correct)}else{l.fullAttempts=(l.fullAttempts||0)+1;l.fullBest=Math.max(l.fullBest||0,quiz.correct)}save();
-    view.innerHTML=`<div class="panel"><span class="eyebrow">ROUND COMPLETE</span><h1>${quiz.correct}<span class="muted"> / ${total}</span></h1><p>${quiz.correct===total?'You recalled every answer. Try using the word in a new situation.':'Revisit the meaning, then try another shuffled round.'}</p><div class="actions">${button('practice','Try again',`data-word="${quiz.id}" data-mode="${quiz.mode}`)}${button('lesson','Return to lesson',`data-word="${quiz.id}"`,true)}</div></div>`;quiz=null;
+    view.innerHTML=`<div class="panel"><span class="eyebrow">ROUND COMPLETE</span><h1>${quiz.correct}<span class="muted"> / ${total}</span></h1><p>${quiz.correct===total?'You recalled every answer. Try using the word in a new situation.':'Revisit the meaning, then try another shuffled round.'}</p><div class="actions">${button('practice','Try again',`data-word="${quiz.id}" data-mode="${quiz.mode}"`)}${button('lesson','Return to lesson',`data-word="${quiz.id}"`,true)}</div></div>`;quiz=null;
   }
   function checkpoints(){
     if(!p()?.research){view.innerHTML=`<span class="eyebrow">BEFORE / AFTER / LATER</span><h1>See what stays.</h1><div class="panel"><p>A research session uses three 30-question tests. The course and everyday practice work without joining.</p><div class="actions">${button('enroll','Create a research session')}${button('learn','Back to learning','',true)}</div></div>`;return}
