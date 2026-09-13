@@ -681,12 +681,14 @@ function renderCards(list){
   const fragment=document.createDocumentFragment();
   list.forEach(x=>{
     const el=document.createElement('article'); el.className='card';
-    el.innerHTML=`<span class="word">${escapeHtml(x.w)}</span>
+    el.innerHTML=`<span class="word"><button type="button" class="word-button">${escapeHtml(x.w)}</button></span>
       <div class="lang-row" lang="en">${escapeHtml(x.m)}</div>
       <div class="lang-row kz" lang="kk">${escapeHtml(x.k||translateShort(x.w))}</div>
       <div class="example">${escapeHtml(x.e||'')}</div><span class="pill">${escapeHtml(x.p)}</span>
       <div class="card-actions"><button class="card-action show-meaning" type="button">Meaning</button><button class="card-action practice-word" type="button">Practice ×10</button></div>`;
-    el.querySelector('.show-meaning').addEventListener('click',()=>{navigateSection('chat',{reset:true});ask(`Explain ${x.w}`);});
+    el.querySelector('.word-button').addEventListener('click',()=>window.SlangStudio.open(x));
+    el.querySelector('.show-meaning').textContent='Explore & learn';
+    el.querySelector('.show-meaning').addEventListener('click',()=>window.SlangStudio.open(x));
     el.querySelector('.practice-word').addEventListener('click',()=>startWordQuiz(x));
     fragment.appendChild(el);
   });
@@ -1035,5 +1037,7 @@ document.querySelectorAll('nav a').forEach(link=>link.addEventListener('click',(
 }));
 
 </script>
+<link rel="stylesheet" href="learning-upgrade.css?v=1">
+<script src="learning-upgrade.js?v=1"></script>
 </body>
 </html>
