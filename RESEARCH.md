@@ -1,10 +1,10 @@
 # Slangify: Core 30 research prototype
 
-This release adds a focused English/Kazakh course to the existing dictionary. It implements lessons, ten practice items per course word, an anonymous participant session, three assessments, local persistence, ratings, paired summaries and CSV/JSON exports. It includes no invented participants or learning outcomes.
+This release adds a focused English/Kazakh course to the existing dictionary. It implements lessons, a six-question learning round plus a separate ten-question full check for each course word, an anonymous participant session, three assessments, local persistence, ratings, paired summaries and CSV/JSON exports. It includes no invented participants or learning outcomes.
 
 ## What is active
 
-- `course.html`: contextual learning or word-and-translation recall.
+- `course.html`: contextual learning or word-and-translation recall. Each word has a short six-question learning round; the full ten-question round remains available as a stronger optional check. The original dictionary practice still has ten questions.
 - Core 30 (`core30-v1`): dictionary-linked target meanings, original teaching examples, Kazakh explanations, neutral equivalents and audience-specific situations.
 - Pre-test, post-test after all 30 lessons, delayed test after 72 hours from post-test completion.
 - Thirty items per test: ten meaning, ten appropriateness and ten neutral-equivalent questions. Item types rotate by word across three forms. Question order and correct-option position vary by participant and stage. A resumed test keeps the same questions.

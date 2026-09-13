@@ -16,6 +16,8 @@
       correct=suitable?'Fits this situation':'Better to rephrase';options=['Fits this situation','Better to rephrase'];
     }else if(type==='neutral'){
       skill='neutral';prompt=`Choose the neutral equivalent for “${w.word}” in this course.`;correct=w.neutral;options=[correct,...others.map(x=>x.neutral)];
+    }else if(type==='neutralReverse'){
+      skill='neutral';prompt=`Which expression has the neutral equivalent “${w.neutral}”?`;correct=w.word;options=[correct,...others.map(x=>x.word)];
     }else if(type==='gap'){
       prompt=w.example.replace(new RegExp(w.word.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'i'),'_____');correct=w.word;options=[correct,...others.map(x=>x.word)];
     }else if(type==='example'){
@@ -41,7 +43,12 @@
     return shuffle(result,r);
   }
   function practice(w){
-    return shuffle([question(w,'meaning',0),question(w,'meaning',1),question(w,'neutral'),question(w,'context',0),question(w,'context',1),question(w,'gap'),question(w,'reverse',0),question(w,'reverse',1),question(w,'example'),question(w,'neutral')]);
+    return shuffle([question(w,'meaning',0),question(w,'meaning',1),question(w,'neutral'),question(w,'context',0),question(w,'context',1),question(w,'gap'),question(w,'reverse',0),question(w,'reverse',1),question(w,'example'),question(w,'neutralReverse')]);
+  }
+  function trainingPractice(w){
+    // A short learning round: six different retrieval/context moves.
+    // `practice` remains the unchanged ten-question full test.
+    return shuffle([question(w,'meaning',0),question(w,'context',0),question(w,'neutral'),question(w,'gap'),question(w,'reverse',1),question(w,'example')]);
   }
   function newProfile({research=false,group='context',assignment='self-selected',seenBefore=false,now=Date.now(),seed=Math.floor(Math.random()*4294967295)}={}){
     if(!['context','classic'].includes(group))throw Error('Unknown learning mode');
@@ -87,7 +94,7 @@
     if(!p||!/^S-[A-F0-9]{8}-[A-Z0-9]{1,16}$/.test(p.id)||p.corpus!==corpus.version||!Number.isInteger(p.seed)||!number(p.seed,0,4294967295)||!number(p.created,1,9e15)||!['context','classic'].includes(p.group)||!['self-selected','random','teacher'].includes(p.assignment)||typeof p.research!=='boolean'||p.delayHours!==72)throw Error('Unsupported or damaged session.');
     const c=newProfile({research:p.research,group:p.group,assignment:p.assignment,seenBefore:!!p.seenBefore,now:p.created,seed:p.seed});if(c.id!==p.id)throw Error('Session code does not match.');
     c.updated=number(p.updated,p.created,9e15)?p.updated:p.created;c.externalUse=!!p.externalUse;c.activeSeconds=number(p.activeSeconds,0,1e8)?p.activeSeconds:0;c.aiChecks=Number.isInteger(p.aiChecks)&&number(p.aiChecks,0,1e6)?p.aiChecks:0;
-    for(const w of words){const l=p.lessons?.[w.id];if(l)c.lessons[w.id]={done:l.done===true,attempts:Number.isInteger(l.attempts)&&number(l.attempts,0,1e5)?l.attempts:0,best:Number.isInteger(l.best)&&number(l.best,0,10)?l.best:0,sentence:typeof l.sentence==='string'?l.sentence.slice(0,500):'',context:['friends','school','formal','interview'].includes(l.context)?l.context:'friends'};}
+    for(const w of words){const l=p.lessons?.[w.id];if(l)c.lessons[w.id]={done:l.done===true,attempts:Number.isInteger(l.attempts)&&number(l.attempts,0,1e5)?l.attempts:0,best:Number.isInteger(l.best)&&number(l.best,0,10)?l.best:0,quickAttempts:Number.isInteger(l.quickAttempts)&&number(l.quickAttempts,0,1e5)?l.quickAttempts:0,quickBest:Number.isInteger(l.quickBest)&&number(l.quickBest,0,6)?l.quickBest:0,fullAttempts:Number.isInteger(l.fullAttempts)&&number(l.fullAttempts,0,1e5)?l.fullAttempts:0,fullBest:Number.isInteger(l.fullBest)&&number(l.fullBest,0,10)?l.fullBest:0,sentence:typeof l.sentence==='string'?l.sentence.slice(0,500):'',context:['friends','school','formal','interview'].includes(l.context)?l.context:'friends'};}
     for(const s of stages){const t=p.tests?.[s];if(!t)continue;
       if(!p.research||!number(t.started,p.created,9e15)||!Array.isArray(t.answers)||t.answers.length>30||(t.completed!==null&&!number(t.completed,t.started,9e15))||!!t.completed!==(t.answers.length===30))throw Error('Invalid assessment data.');
       if(s!=='pre'&&!c.tests.pre?.completed||s==='delayed'&&!c.tests.post?.completed)throw Error('Invalid assessment order.');
@@ -118,6 +125,6 @@
     const rows=[cols];profiles.filter(p=>p.research).forEach(p=>stages.forEach(s=>{const n=score(p,s);if(n)rows.push([p.id,p.group,p.assignment,p.corpus,p.seenBefore,p.externalUse,p.aiChecks,Object.values(p.lessons).filter(l=>l.done).length,Math.round(p.activeSeconds),p.survey?.enjoyment??'',p.survey?.confidence??'',p.survey?.difficulty??'',s,new Date(p.tests[s].started).toISOString(),new Date(p.tests[s].completed).toISOString(),n.percent,n.meaning,n.context,n.neutral,Math.round(n.seconds)])}));
     const safe=v=>'"'+String(v).replace(/^[=+@-]/,"'$&").replace(/"/g,'""')+'"';return '\uFEFF'+rows.map(row=>row.map(safe).join(',')).join('\r\n');
   }
-  const api={words,corpus,key,stages,byId,shuffle,question,practice,assessment,newProfile,due,gate,startTest,answerTest,score,groups,cleanProfile,parse,merge,csv};
+  const api={words,corpus,key,stages,byId,shuffle,question,practice,trainingPractice,assessment,newProfile,due,gate,startTest,answerTest,score,groups,cleanProfile,parse,merge,csv};
   if(typeof module!=='undefined')module.exports=api;else root.SlangStudy=api;
 })(typeof window!=='undefined'?window:globalThis);

@@ -1,10 +1,10 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),S=require('../study-core.js');
 const profile=(seed=42,group='context')=>S.newProfile({seed,group,research:true,assignment:'random',now:1000000000});
 function complete(p,s,correct=30,now=1000001000){S.startTest(p,s,now);const qs=S.assessment(p,s);qs.forEach((q,i)=>S.answerTest(p,s,i<correct?q.correct:(q.correct+1)%q.options.length,1500,now+1000));}
-function lessons(p){S.words.forEach(w=>p.lessons[w.id]={done:true,attempts:1,best:8,sentence:'An original fictional example.',context:'friends'})}
+function lessons(p){S.words.forEach(w=>p.lessons[w.id]={done:true,attempts:1,best:8,quickAttempts:0,quickBest:0,fullAttempts:0,fullBest:0,sentence:'An original fictional example.',context:'friends'})}
 test('30 sourced entries, ten valid tasks each, unique options and reproducible balanced tests',()=>{
   assert.equal(S.words.length,30);assert.equal(new Set(S.words.map(w=>w.id)).size,30);
-  S.words.forEach(w=>{assert.match(w.source,/^https:\/\/(www.merriam-webster.com|dictionary.cambridge.org)\//);assert.ok(w.kk&&w.good&&w.bad);const qs=S.practice(w);assert.equal(qs.length,10);qs.forEach(q=>{assert.equal(new Set(q.options).size,q.options.length);assert.ok(q.correct>=0&&q.correct<q.options.length)})});
+  S.words.forEach(w=>{assert.match(w.source,/^https:\/\/(www.merriam-webster.com|dictionary.cambridge.org)\//);assert.ok(w.kk&&w.good&&w.bad);const quick=S.trainingPractice(w),full=S.practice(w);assert.equal(quick.length,6);assert.equal(full.length,10);quick.concat(full).forEach(q=>{assert.equal(new Set(q.options).size,q.options.length);assert.ok(q.correct>=0&&q.correct<q.options.length)})});
   for(let seed=1;seed<=20;seed++){const p=profile(seed);for(const s of S.stages){const qs=S.assessment(p,s);assert.deepEqual(qs,S.assessment(p,s));assert.equal(new Set(qs.map(q=>q.wordId)).size,30);for(const skill of ['meaning','context','neutral'])assert.equal(qs.filter(q=>q.skill===skill).length,10);for(const n of [2,4]){const totals=Array(n).fill(0);qs.filter(q=>q.options.length===n).forEach(q=>totals[q.correct]++);assert.ok(Math.max(...totals)-Math.min(...totals)<=1)}}}
   assert.notDeepEqual(S.assessment(profile(1),'pre'),S.assessment(profile(2),'pre'));
 });
