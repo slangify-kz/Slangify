@@ -53,7 +53,7 @@
   function newProfile({research=false,group='context',assignment='self-selected',seenBefore=false,now=Date.now(),seed=Math.floor(Math.random()*4294967295)}={}){
     if(!['context','classic'].includes(group))throw Error('Unknown learning mode');
     const id='S-'+seed.toString(16).padStart(8,'0').toUpperCase()+'-'+now.toString(36).toUpperCase();
-    return {id,seed,corpus:corpus.version,created:now,updated:now,research,group,assignment,seenBefore,externalUse:false,delayHours:72,lessons:{},tests:{},activeSeconds:0,aiChecks:0,survey:null};
+    return {id,seed,corpus:corpus.version,created:now,updated:now,research,group,assignment,seenBefore,externalUse:false,delayHours:72,lessons:{},tests:{},activeSeconds:0,aiChecks:0,survey:null,demo:false,demoScores:null};
   }
   function due(p){return p.tests.post?.completed?p.tests.post.completed+p.delayHours*3600000:null}
   function gate(p,stage,now=Date.now()){
@@ -83,17 +83,20 @@
   function score(p,stage){
     const t=p.tests[stage];if(!t?.completed)return null;
     const qs=assessment(p,stage),out={correct:0,total:30,meaning:0,context:0,neutral:0,seconds:0};
-    qs.forEach((q,i)=>{const a=t.answers[i];if(a.choice===q.correct){out.correct++;out[q.skill]++}out.seconds+=a.ms/1000});out.percent=Math.round(out.correct/30*100);return out;
+    qs.forEach((q,i)=>{const a=t.answers[i];if(a.choice===q.correct){out.correct++;out[q.skill]++}out.seconds+=a.ms/1000});
+    const demoPercent=p.demo&&Number.isInteger(p.demoScores?.[stage])?p.demoScores[stage]:null;
+    out.percent=demoPercent===null?Math.round(out.correct/30*100):demoPercent;return out;
   }
   const mean=a=>a.length?a.reduce((s,n)=>s+n,0)/a.length:null;
   function groups(profiles){return ['classic','context'].map(group=>{
-    const all=profiles.filter(p=>p.research&&p.group===group),paired=all.filter(p=>score(p,'pre')&&score(p,'post')),retained=paired.filter(p=>score(p,'delayed'));
+    const all=profiles.filter(p=>p.research&&!p.demo&&p.group===group),paired=all.filter(p=>score(p,'pre')&&score(p,'post')),retained=paired.filter(p=>score(p,'delayed'));
     return {group,n:all.length,paired:paired.length,delayedN:retained.length,pre:mean(paired.map(p=>score(p,'pre').percent)),post:mean(paired.map(p=>score(p,'post').percent)),gain:mean(paired.map(p=>score(p,'post').percent-score(p,'pre').percent)),delayed:mean(retained.map(p=>score(p,'delayed').percent)),retentionChange:mean(retained.map(p=>score(p,'delayed').percent-score(p,'post').percent)),exposed:all.filter(p=>p.seenBefore||p.externalUse).length,aiChecks:all.reduce((s,p)=>s+p.aiChecks,0),enjoyment:mean(all.filter(p=>p.survey).map(p=>p.survey.enjoyment))};})}
   const number=(v,min,max)=>typeof v==='number'&&Number.isFinite(v)&&v>=min&&v<=max;
   function cleanProfile(p){
     if(!p||!/^S-[A-F0-9]{8}-[A-Z0-9]{1,16}$/.test(p.id)||p.corpus!==corpus.version||!Number.isInteger(p.seed)||!number(p.seed,0,4294967295)||!number(p.created,1,9e15)||!['context','classic'].includes(p.group)||!['self-selected','random','teacher'].includes(p.assignment)||typeof p.research!=='boolean'||p.delayHours!==72)throw Error('Unsupported or damaged session.');
     const c=newProfile({research:p.research,group:p.group,assignment:p.assignment,seenBefore:!!p.seenBefore,now:p.created,seed:p.seed});if(c.id!==p.id)throw Error('Session code does not match.');
     c.updated=number(p.updated,p.created,9e15)?p.updated:p.created;c.externalUse=!!p.externalUse;c.activeSeconds=number(p.activeSeconds,0,1e8)?p.activeSeconds:0;c.aiChecks=Number.isInteger(p.aiChecks)&&number(p.aiChecks,0,1e6)?p.aiChecks:0;
+    c.demo=p.demo===true;if(c.demo){if(!p.demoScores||!stages.every(s=>Number.isInteger(p.demoScores[s])&&number(p.demoScores[s],0,100)))throw Error('Invalid demo scores.');c.demoScores=Object.fromEntries(stages.map(s=>[s,p.demoScores[s]]));}
     for(const w of words){const l=p.lessons?.[w.id];if(l)c.lessons[w.id]={done:l.done===true,attempts:Number.isInteger(l.attempts)&&number(l.attempts,0,1e5)?l.attempts:0,best:Number.isInteger(l.best)&&number(l.best,0,10)?l.best:0,quickAttempts:Number.isInteger(l.quickAttempts)&&number(l.quickAttempts,0,1e5)?l.quickAttempts:0,quickBest:Number.isInteger(l.quickBest)&&number(l.quickBest,0,6)?l.quickBest:0,fullAttempts:Number.isInteger(l.fullAttempts)&&number(l.fullAttempts,0,1e5)?l.fullAttempts:0,fullBest:Number.isInteger(l.fullBest)&&number(l.fullBest,0,10)?l.fullBest:0,sentence:typeof l.sentence==='string'?l.sentence.slice(0,500):'',context:['friends','school','formal','interview'].includes(l.context)?l.context:'friends'};}
     for(const s of stages){const t=p.tests?.[s];if(!t)continue;
       if(!p.research||!number(t.started,p.created,9e15)||!Array.isArray(t.answers)||t.answers.length>30||(t.completed!==null&&!number(t.completed,t.started,9e15))||!!t.completed!==(t.answers.length===30))throw Error('Invalid assessment data.');
@@ -122,7 +125,7 @@
   }
   function csv(profiles){
     const cols=['code','group','assignment','corpus','prior_exposure','outside_course','ai_checks','course_words','active_seconds','enjoyment','confidence','difficulty','stage','started_utc','completed_utc','score_percent','meaning_10','context_10','neutral_10','answer_seconds'];
-    const rows=[cols];profiles.filter(p=>p.research).forEach(p=>stages.forEach(s=>{const n=score(p,s);if(n)rows.push([p.id,p.group,p.assignment,p.corpus,p.seenBefore,p.externalUse,p.aiChecks,Object.values(p.lessons).filter(l=>l.done).length,Math.round(p.activeSeconds),p.survey?.enjoyment??'',p.survey?.confidence??'',p.survey?.difficulty??'',s,new Date(p.tests[s].started).toISOString(),new Date(p.tests[s].completed).toISOString(),n.percent,n.meaning,n.context,n.neutral,Math.round(n.seconds)])}));
+    const rows=[cols];profiles.filter(p=>p.research&&!p.demo).forEach(p=>stages.forEach(s=>{const n=score(p,s);if(n)rows.push([p.id,p.group,p.assignment,p.corpus,p.seenBefore,p.externalUse,p.aiChecks,Object.values(p.lessons).filter(l=>l.done).length,Math.round(p.activeSeconds),p.survey?.enjoyment??'',p.survey?.confidence??'',p.survey?.difficulty??'',s,new Date(p.tests[s].started).toISOString(),new Date(p.tests[s].completed).toISOString(),n.percent,n.meaning,n.context,n.neutral,Math.round(n.seconds)])}));
     const safe=v=>'"'+String(v).replace(/^[=+@-]/,"'$&").replace(/"/g,'""')+'"';return '\uFEFF'+rows.map(row=>row.map(safe).join(',')).join('\r\n');
   }
   const api={words,corpus,key,stages,byId,shuffle,question,practice,trainingPractice,assessment,newProfile,due,gate,startTest,answerTest,score,groups,cleanProfile,parse,merge,csv};
