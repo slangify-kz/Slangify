@@ -3,17 +3,51 @@
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const key='slangify.saved-words.v1';let saved={};try{saved=JSON.parse(localStorage.getItem(key)||'{}');if(!saved||Array.isArray(saved)||typeof saved!=='object')saved={};}catch{}
   const dialog=document.createElement('dialog');dialog.className='word-studio';dialog.setAttribute('aria-label','Word studio');document.body.append(dialog);
-  let current=null,step=0,roundScore=0,checked=false,lastFocus=null,videoRequest=0;
+  let current=null,step=0,roundScore=0,checked=false,lastFocus=null,ygWidget=null,ygLoading=false,ygQueue=[],ygTrack=0,ygTotal=0,videoRequest=0,videoTimer=null;
   const normalize=s=>String(s).trim().toLowerCase().replace(/[’']/g,"'");
   const getWords=()=>typeof allItems!=='undefined'?allItems.map(adapt):(window.SlangStudy?.words||[]).map(adapt);
   function adapt(w){const custom=window.SlangContent?.get(w.w||w.word);return {w:w.w||w.word,m:custom?.meaning||w.m||w.en,k:custom?.kazakh||w.k||w.kk,e:custom?.example||w.e||w.example,p:w.p||w.kind||'Expression',neutral:w.neutral||'',note:custom?.note||''}}
   function persist(){try{localStorage.setItem(key,JSON.stringify(saved));return true}catch{return false}}
   function show(w){current=adapt(w);lastFocus=document.activeElement;if(!dialog.open)dialog.showModal();meaning()}
-  function disposeVideo(){videoRequest++;const video=dialog.querySelector('video');if(video){video.pause();video.removeAttribute('src');video.load()}}
+  function disposeVideo(){videoRequest++;const local=dialog.querySelector('video');if(local){local.pause();local.removeAttribute('src');local.load()}clearTimeout(videoTimer);try{ygWidget?.pause();ygWidget?.close()}catch{}ygWidget=null;ygTrack=0;ygTotal=0}
   function shell(body){disposeVideo();dialog.innerHTML=`<p class="studio-label">WORD STUDIO · ${esc(current.p)}</p><div class="studio-top"><h2>${esc(current.w)}</h2><button data-studio="close" aria-label="Close word studio">✕</button></div><div class="studio-tabs"><button data-studio="meaning">Meaning</button><button data-studio="learn">Learn · 6 steps</button><button data-studio="video">Video</button><button data-studio="save" aria-pressed="${!!saved[normalize(current.w)]}">${saved[normalize(current.w)]?'Saved ✓':'Save word'}</button></div><div id="studio-body">${body}</div>`}
   function meaning(){shell(`<div class="studio-meaning"><p>${esc(current.m)}</p><p lang="kk">${esc(current.k)}</p></div><p class="studio-example">${esc(current.e)}</p>${current.note?`<p class="studio-owner-note">${esc(current.note)}</p>`:''}<div class="learning-tools"><button data-studio="speak">Listen to pronunciation</button><button class="primary" data-studio="learn">Start learning →</button></div><p class="studio-note">Learn through recall, a sentence gap and a short memory check. Your saved words stay in this browser.</p>`)}
-  function openSample(){const sample=window.SlangContent?.entries.find(item=>item.video);if(sample){show({w:sample.word,m:sample.meaning,k:sample.kazakh,e:sample.example,p:'Spoken English'});videos()}}
-  function videos(){
+  function loadYouGlish(done){
+    if(window.YG?.Widget){done(true);return}
+    ygQueue.push(done);if(ygLoading)return;ygLoading=true;
+    const script=document.createElement('script');let timer,settled=false;
+    const finish=ok=>{if(settled)return;settled=true;clearTimeout(timer);ygLoading=false;if(!ok)script.remove();ygQueue.splice(0).forEach(fn=>fn(ok))};
+    window.onYouglishAPIReady=()=>finish(!!window.YG?.Widget);
+    script.async=true;script.src='https://youglish.com/public/emb/widget.js';script.charset='utf-8';script.onerror=()=>finish(false);
+    timer=setTimeout(()=>finish(false),15000);document.head.appendChild(script);
+  }
+  function mountYouGlish(){
+    const host=document.getElementById('youglish-host'),status=document.getElementById('yg-status'),next=dialog.querySelector('[data-yg-next]'),replay=dialog.querySelector('[data-yg-replay]');
+    if(!host)return;
+    const request=++videoRequest,word=current.w,id=`yg-widget-${request}`;
+    const active=()=>request===videoRequest&&dialog.open&&host.isConnected;
+    const unavailable=()=>{if(!active())return;clearTimeout(videoTimer);status.textContent='The embedded player is unavailable. Open YouGlish results to watch the matching clips.';host.innerHTML='<p class="studio-feedback">You can still open real speech examples using the link below.</p>';next.disabled=true;replay.disabled=true};
+    const update=()=>{next.disabled=ygTotal<2||ygTrack>=ygTotal;replay.disabled=!ygTotal};
+    host.innerHTML='<div class="yg-widget-loading">Loading real speech clips…</div>';
+    videoTimer=setTimeout(unavailable,25000);
+    loadYouGlish(ok=>{
+      if(!active())return;if(!ok){unavailable();return}
+      host.innerHTML=`<div id="${id}"></div>`;
+      try{
+        ygWidget=new window.YG.Widget(id,{autoStart:0,components:28,restrictionMode:1,videoQuality:'default',captionSize:22,title:'%query% · real speech (%i% of %total%)',events:{
+          onFetchDone:event=>{if(!active())return;clearTimeout(videoTimer);ygTotal=Math.max(0,Math.min(5,Number(event.totalResult)||0));ygTrack=ygTotal?1:0;status.textContent=ygTotal?`Clip 1 of ${ygTotal}. Press play to hear the expression.`:'No matching clips were found for this expression.';update()},
+          onVideoChange:event=>{if(!active())return;clearTimeout(videoTimer);const raw=Number(event.trackNumber);ygTrack=Math.max(1,Math.min(ygTotal||5,Number.isFinite(raw)?raw:1));status.textContent=ygTotal?`Clip ${ygTrack} of ${ygTotal}.`:'Preparing the first clip…';update()},
+          onCaptionConsumed:()=>{if(active())ygWidget?.pause()},
+          onError:()=>{if(!active())return;clearTimeout(videoTimer);status.textContent='This clip cannot play here. Try Next clip or open YouGlish results.';update()}
+        }});
+        // An empty placement mask requests no optional partner ad slots.
+        ygWidget.setAdsLocation?.(0);
+        ygWidget.fetch(word,'english','us');
+      }catch{unavailable()}
+    });
+  }
+  function videos(){if(window.SlangContent?.get(current.w)?.video){ownerVideo();return}const query=encodeURIComponent(current.w);shell(`<h3>Hear it in real conversation</h3><p class="studio-note">Real YouTube speech containing <strong>${esc(current.w)}</strong>, found by YouGlish. Playback pauses after the matching line. Explore up to five available matches; some expressions may have fewer results.</p><div id="youglish-host" class="youglish-host"></div><p id="yg-status" class="studio-note" role="status" aria-live="polite">Preparing real speech clips…</p><div class="learning-tools"><button data-yg-replay disabled>Replay line ↻</button><button data-yg-next disabled>Next clip →</button><button data-studio="speak">Listen to pronunciation</button></div><details class="video-info"><summary>Video source &amp; information</summary><p><a href="https://youglish.com/pronounce/${query}/english/us" target="_blank" rel="noopener noreferrer">Open YouGlish results ↗</a></p><p class="studio-note"><a href="https://youglish.com" target="_blank" rel="noopener noreferrer">Powered by YouGlish.com</a> · video services may use cookies. <a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener noreferrer">YouTube terms</a> · <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google privacy</a></p></details>`);mountYouGlish()}
+  function ownerVideo(){
     shell('<h3>Hear it in context</h3><p class="studio-note" role="status">Loading the clip…</p>');
     const request=videoRequest,word=current.w;
     Promise.resolve(window.SlangContent?.ready).then(()=>{
@@ -21,8 +55,7 @@
       const clip=window.SlangContent?.get(word)?.video;
       if(!clip){
         const message=window.SlangContent?.error?'Clips could not be loaded. Please try again later.':'A video example has not been added for this word yet.';
-        const sample=window.SlangContent?.entries.find(item=>item.video);
-        dialog.querySelector('#studio-body').innerHTML='<div class="studio-empty"><span aria-hidden="true">▷</span><h3>Hear it in context</h3><p>'+message+'</p><div class="learning-tools"><button data-studio="speak">Listen to pronunciation</button>'+(sample?'<button class="primary" data-studio="sample">Watch example · '+esc(sample.word)+'</button>':'')+'</div></div>';
+        dialog.querySelector('#studio-body').innerHTML='<div class="studio-empty"><span aria-hidden="true">▷</span><h3>Hear it in context</h3><p>'+message+'</p><div class="learning-tools"><button data-studio="speak">Listen to pronunciation</button></div></div>';
         return;
       }
       const caption=clip.caption,at=caption.toLowerCase().indexOf(word.toLowerCase());
@@ -48,7 +81,8 @@
   dialog.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const a=b.dataset.studio;
     if(b.dataset.videoReplay!==undefined){const video=dialog.querySelector('video');if(video){video.currentTime=0;video.play().catch(()=>feedback('Press play on the video to start.'))}return}
     if(b.dataset.videoSpeed!==undefined){const video=dialog.querySelector('video');if(video){video.playbackRate=video.playbackRate===1 ? 0.75 : 1;b.setAttribute('aria-pressed',String(video.playbackRate!==1));b.textContent=video.playbackRate===1?'Slow · 0.75×':'Normal · 1×'}return}
-    if(a==='sample'){openSample();return}
+    if(b.dataset.ygNext!==undefined){if(b.disabled||!ygWidget||!ygTotal||ygTrack>=ygTotal)return;b.disabled=true;ygWidget.next();return}
+    if(b.dataset.ygReplay!==undefined){if(!b.disabled&&ygWidget)ygWidget.replay();return}
     if(b.dataset.choice!==undefined){if(checked)return;checked=true;const right=normalize(b.dataset.choice)===normalize(current.w);if(right)roundScore++;dialog.querySelectorAll('[data-choice]').forEach(x=>x.disabled=true);feedback(right?'Correct!':`Answer: ${current.w}`);dialog.querySelector('#studio-body').insertAdjacentHTML('beforeend','<button data-studio="next">Continue →</button>');return}
     if(a==='close')dialog.close();if(a==='meaning')meaning();if(a==='learn')begin();if(a==='video')videos();if(a==='speak')speak();if(a==='next')advance();
     if(a==='save'){const id=normalize(current.w);if(saved[id])delete saved[id];else saved[id]={...current,due:Date.now()};const ok=persist();b.textContent=saved[id]?'Saved ✓':'Save word';b.setAttribute('aria-pressed',String(!!saved[id]));if(!ok)feedback('Saved for this visit only; browser storage is unavailable.')}

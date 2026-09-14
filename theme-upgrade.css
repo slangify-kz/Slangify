@@ -21,3 +21,13 @@ html[data-style="gen-z-sticker"] .card:nth-child(3n){transform:rotate(1deg)}
 html[data-style="gen-z-sticker"] .card:nth-child(3n):hover{transform:rotate(1deg) translateY(-4px)}
 
 @media(max-width:760px){.studio-tabs{position:sticky;top:-20px;z-index:2;background:var(--surface);padding:5px 0}.studio-tabs button{min-height:44px}}
+
+.youglish-host{min-height:230px;display:grid;place-items:center;background:var(--surface-alt);border:1px solid var(--line);border-radius:16px;overflow:hidden;margin:18px 0}
+.youglish-host>div{width:100%;min-height:230px}
+.yg-widget-loading{padding:30px;color:var(--muted);text-align:center}
+.youglish-host iframe{max-width:100%;border:0}
+.video-info{margin-top:16px;border-top:1px solid var(--line);padding-top:12px;color:var(--muted);font-size:12px;line-height:1.65}
+.video-info summary{cursor:pointer;min-height:36px;display:list-item}
+.video-info a{color:var(--muted);text-underline-offset:3px}
+.word-studio a[href*="fluently" i]{display:none!important}
+@media(max-width:760px){.youglish-host,.youglish-host>div{min-height:205px}}
