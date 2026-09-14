@@ -1,5 +1,22 @@
 {
   "version": 1,
-  "revision": "local-content-20260914",
-  "entries": []
+  "revision": "apollo-native-20260914",
+  "entries": [
+    {
+      "word": "okay",
+      "meaning": "All right; used to agree or move to the next action.",
+      "kazakh": "Жарайды; келісуді не келесі әрекетке көшуді білдіреді.",
+      "example": "Okay, let's get started.",
+      "note": "In this clip, “okay” introduces what the speaker will do next.",
+      "category": "everyday",
+      "video": {
+        "src": "media/okay-apollo.mp4",
+        "title": "Okay — a real spoken example",
+        "caption": "Okay, I'm going to step off the LEM now.",
+        "credit": "NASA · Apollo 11, 1969 · archival mission recording",
+        "license": "Public domain · NASA / US federal government",
+        "captions": "media/okay-apollo.vtt"
+      }
+    }
+  ]
 }
