@@ -1,0 +1,26 @@
+/* Visual layer: each style gets a light, readable background illustration. */
+body{position:relative;isolation:isolate;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.24;background-repeat:repeat;mix-blend-mode:multiply}
+html[data-style="modern-pixel"] body:before{opacity:.3;background-image:radial-gradient(var(--accent) 1px,transparent 1px),linear-gradient(90deg,transparent 95%,var(--accent) 95%),linear-gradient(transparent 95%,var(--accent) 95%);background-size:18px 18px,36px 36px,36px 36px}
+html[data-style="y2k"] body:before{opacity:.26;background-image:radial-gradient(ellipse at 15% 25%,#ff9fe8 0 7%,transparent 24%),radial-gradient(ellipse at 88% 12%,#9de4ff 0 8%,transparent 28%),radial-gradient(ellipse at 65% 88%,#c9a5ff 0 5%,transparent 24%);background-size:100% 100%}
+html[data-style="neo-brutalism"] body:before{opacity:.22;background-image:linear-gradient(135deg,transparent 0 43%,#ff5a4d 43% 47%,transparent 47% 100%),linear-gradient(45deg,transparent 0 62%,#f4d44d 62% 68%,transparent 68% 100%),radial-gradient(circle at 12% 75%,#4d60e8 0 45px,transparent 47px);background-size:100% 100%}
+html[data-style="retro-web"] body:before{opacity:.22;background-image:radial-gradient(#3e6b4e 1px,transparent 1px),repeating-linear-gradient(0deg,transparent 0 15px,#a8864b22 15px 16px);background-size:10px 10px,100% 16px}
+html[data-style="modern-minimal"] body:before{opacity:.13;background-image:radial-gradient(ellipse at 20% 15%,transparent 0 90px,var(--accent) 91px 92px,transparent 93px),radial-gradient(ellipse at 85% 80%,transparent 0 120px,var(--accent-2) 121px 122px,transparent 123px);background-size:100% 100%}
+html[data-style="dark-neon"] body:before{opacity:.32;mix-blend-mode:screen;background-image:radial-gradient(circle,#c1a3ff 0 1px,transparent 2px),linear-gradient(115deg,transparent 47%,#73dcf055 48% 49%,transparent 50%);background-size:74px 74px,150px 150px}
+html[data-style="gen-z-sticker"] body:before{opacity:.26;background-image:radial-gradient(circle at 12% 15%,#ff9ecb 0 28px,transparent 30px),radial-gradient(circle at 92% 25%,#94d9ff 0 34px,transparent 36px),radial-gradient(circle at 76% 88%,#ffd18a 0 38px,transparent 40px),radial-gradient(var(--accent) 1px,transparent 2px);background-size:100% 100%,100% 100%,100% 100%,22px 22px}
+html[data-style="arcade-modern"] body:before{opacity:.26;mix-blend-mode:screen;background-image:linear-gradient(#83d9dd33 1px,transparent 1px),linear-gradient(90deg,#83d9dd33 1px,transparent 1px),repeating-linear-gradient(0deg,transparent 0 9px,#f5c55b18 9px 10px);background-size:32px 32px,32px 32px,100% 20px}
+html[data-style="street-graffiti"] body:before{opacity:.34;mix-blend-mode:multiply;background-image:radial-gradient(circle at 12% 18%,#f04b3c 0 5px,transparent 6px),radial-gradient(circle at 16% 20%,#f2ba28 0 10px,transparent 11px),radial-gradient(circle at 83% 76%,#3156b8 0 8px,transparent 9px),radial-gradient(circle at 86% 72%,#32a56b 0 4px,transparent 5px),repeating-linear-gradient(118deg,transparent 0 42px,#a3351930 43px 48px,transparent 49px 90px);background-size:54px 54px,100% 100%,70px 70px,100% 100%,180px 180px}
+html[data-style="street-graffiti"] body:after{content:"SLANG";position:fixed;z-index:-1;right:-35px;bottom:12%;font:900 clamp(70px,15vw,190px)/.8 "Arial Black",sans-serif;letter-spacing:-.08em;color:#a3351920;transform:rotate(-13deg);pointer-events:none}
+html[data-style="cyberpunk"] body:before{opacity:.3;mix-blend-mode:screen;background-image:linear-gradient(120deg,transparent 0 46%,#7ee5d855 47% 48%,transparent 49%),linear-gradient(30deg,transparent 0 71%,#e4f57b44 72% 73%,transparent 74%),radial-gradient(circle at 80% 10%,#e4f57b 0 1px,transparent 2px);background-size:120px 120px,180px 180px,56px 56px}
+.youglish-host{min-height:230px;display:grid;place-items:center;background:var(--surface-alt);border:1px solid var(--line);border-radius:16px;overflow:hidden;margin:18px 0}
+.youglish-host>div{width:100%;min-height:230px}
+.yg-widget-loading{padding:30px;color:var(--muted);text-align:center}
+.youglish-host iframe{max-width:100%;border:0}
+.studio-tabs button{transition:transform .14s,background .14s}
+.studio-tabs button:hover{transform:translateY(-2px)}
+.card,.lesson-button{transition:transform .16s,box-shadow .16s,border-color .16s}
+.card:hover,.lesson-button:hover{transform:translateY(-4px);box-shadow:0 12px 30px #00000012!important}
+html[data-style="street-graffiti"] .card:hover,html[data-style="street-graffiti"] .lesson-button:hover{transform:rotate(-1deg) translateY(-4px)}
+html[data-style="gen-z-sticker"] .card:nth-child(3n){transform:rotate(1deg)}
+html[data-style="gen-z-sticker"] .card:nth-child(3n):hover{transform:rotate(1deg) translateY(-4px)}
+@media(max-width:760px){.youglish-host{min-height:205px}.youglish-host>div{min-height:205px}.studio-tabs{position:sticky;top:-20px;z-index:2;background:var(--surface);padding:5px 0}.studio-tabs button{min-height:44px}}
