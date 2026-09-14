@@ -1,0 +1,53 @@
+name: Prepare native speech sample
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/prepare-native-clip.yml'
+      - 'scripts/add-native-clip.cjs'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: slangify-native-clip
+  cancel-in-progress: false
+jobs:
+  prepare:
+    if: github.repository == 'slangify-kz/Slangify'
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check learning and content behavior
+        run: node --test tests/*.test.cjs
+      - name: Prepare public-domain NASA speech example
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p media
+          if ! command -v ffmpeg >/dev/null; then
+            sudo apt-get update -qq
+            sudo apt-get install -y ffmpeg
+          fi
+          if [ ! -s media/okay-apollo.mp4 ]; then
+            curl --fail --location --silent --show-error --retry 2 --max-time 60 \
+              'https://upload.wikimedia.org/wikipedia/commons/a/a6/Apollo_11_Landing_-_first_steps_on_the_moon.ogv' \
+              -o /tmp/slangify-apollo-source.ogv
+            ffmpeg -hide_banner -loglevel error -y -ss 35.8 \
+              -i /tmp/slangify-apollo-source.ogv -t 6.8 \
+              -c:v libx264 -profile:v baseline -pix_fmt yuv420p -crf 24 \
+              -c:a aac -b:a 64k -movflags +faststart media/okay-apollo.mp4
+          fi
+          ffprobe -v error -show_entries format=duration,size -of json media/okay-apollo.mp4
+          node scripts/add-native-clip.cjs
+      - name: Save sample and word together
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'Slangify media'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add media/okay-apollo.mp4 media/okay-apollo.vtt content/entries.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add native public-domain okay speech clip'
+            git push origin HEAD:main
+          fi
