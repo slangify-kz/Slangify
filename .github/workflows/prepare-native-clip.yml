@@ -5,6 +5,7 @@ on:
     paths:
       - '.github/workflows/prepare-native-clip.yml'
       - 'scripts/add-native-clip.cjs'
+      - 'tests/*.test.cjs'
   workflow_dispatch:
 permissions:
   contents: write
