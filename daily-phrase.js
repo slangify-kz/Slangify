@@ -27,8 +27,8 @@ function distractors(item,pool,seed){
  return picked;
 }
 function loadOwnerMode(){
- if(document.querySelector('script[data-slangify-owner-mode]'))return;
- const script=document.createElement('script');script.src='owner-mode.js?v=20260917b';script.dataset.slangifyOwnerMode='true';document.head.appendChild(script);
+ if(document.querySelector('script[src*="owner-mode.js"]'))return;
+ const script=document.createElement('script');script.src='owner-mode.js?v=20260917e';script.dataset.slangifyOwnerMode='true';document.head.appendChild(script);
 }
 function setup(){
  const host=document.querySelector('.search-tools');if(!host)return;
