@@ -46,3 +46,8 @@ html[data-style] .progress-bar{background:var(--accent);box-shadow:none}
 @media(max-width:600px){.daily-check{width:100%}.daily-actions button{flex:1 1 130px}.word-studio{padding:18px}.studio-tabs{gap:6px}.studio-tabs button{min-height:44px;padding:9px 11px}.daily-clue{padding:13px}}
 
 @media(max-width:760px){body[data-mobile-view="practice"] .daily-phrase{display:none}}
+.hero-tagline{display:none;color:var(--muted);font-size:12px;letter-spacing:.06em;margin:0 0 12px}
+@media(max-width:1440px){.hero-tagline{display:block}}
+[data-owner-step][role="button"],#owner-title-trigger[role="button"]{cursor:pointer}
+[data-owner-step]:focus-visible,#owner-title-trigger:focus-visible{outline:2px solid var(--accent);outline-offset:5px;border-radius:4px}
+.owner-results [hidden]{display:none!important}.owner-results-import{display:grid;gap:8px;margin:18px 0;font-size:13px}.owner-results-import input{max-width:100%}

@@ -207,7 +207,7 @@ try {
 <body data-mobile-view="home">
 <header class="topbar">
   <a class="brand" href="#"><span class="brand-mark"></span>Slangify</a>
-  <div class="tagline">Real English. Real People.</div>
+  <div class="tagline" data-owner-step="first">Real English. Real People.</div>
   <nav aria-label="Main navigation"><a class="active" href="#home">Home</a><a href="course.html">Course</a><a href="#dictionary">Slang Dictionary</a><a href="#practice">Practice</a><a href="#about">About</a></nav>
   <div class="top-actions">
     <button class="style-trigger" id="styleTrigger" type="button" aria-haspopup="dialog" aria-controls="styleDialog" aria-expanded="false" aria-label="Change website style">
@@ -221,7 +221,8 @@ try {
 <main id="home" class="wrap">
   <section class="hero">
     <div>
-      <h1>Understand <span class="blue">slang.</span><br>Speak <span class="grad">like a local.</span></h1>
+      <p class="hero-tagline" data-owner-step="first">Real English. Real People.</p>
+      <h1><span id="owner-title-trigger">Understand <span class="blue">slang.</span></span><br>Speak <span class="grad">like a local.</span></h1>
       <p class="hero-copy">Search a large English slang dictionary with clear meanings in English and Kazakh. Explore texting abbreviations, spoken forms, gaming language, internet phrases and real examples.</p>
       <p class="mobile-intro">Real English, made simple. Short meanings in English and Kazakh.</p>
       <div class="features">
@@ -1045,9 +1046,9 @@ document.querySelectorAll('nav a').forEach(link=>link.addEventListener('click',(
 <script src="dictionary-additions.js?v=20260919a"></script>
 <script src="dictionary-content.js?v=20260919a"></script>
 <script src="learning-upgrade.js?v=20260919a"></script>
-<link rel="stylesheet" href="calm-theme.css?v=20260919a">
-<script src="daily-data.js?v=20260919b"></script>
-<script src="daily-phrase.js?v=20260919a"></script>
-<script src="owner-mode.js?v=20260919a"></script>
+<link rel="stylesheet" href="calm-theme.css?v=20260919c">
+<script src="daily-data.js?v=20260919c"></script>
+<script src="daily-phrase.js?v=20260919c"></script>
+<script src="owner-mode.js?v=20260919c"></script>
 </body>
 </html>

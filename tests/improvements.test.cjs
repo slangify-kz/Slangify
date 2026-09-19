@@ -16,7 +16,7 @@ test('777 unique validated entries and 77 additions; every daily answer exists',
  daily.questions.forEach(q=>q.answers.forEach(a=>assert.ok(words.has(model.normalize(a)),a)));
 });
 test('daily questions accept exactly the stated one or two answers in any order',()=>{
- assert.ok(daily.questions.length>=20);
+ assert.equal(daily.questions.length,60);
  assert.equal(new Set(daily.questions.map(q=>q.id)).size,daily.questions.length);
  for(const q of daily.questions){
   assert.ok([1,2].includes(q.answers.length));assert.equal(q.options.length,4);
@@ -30,6 +30,17 @@ test('daily questions accept exactly the stated one or two answers in any order'
  const q=daily.questions.find(q=>q.id==='honest');assert.deepEqual(q.answers,['tbh','ngl']);
  const seen=new Set();for(let n=0;n<40;n++)seen.add(daily.shuffle(['yes','a','b','c']).indexOf('yes'));
  assert.ok(seen.size>1,'answer position must vary');
+});
+test('personal downloads contain only the active participant and do not alter originals',()=>{
+ const a=S.newProfile({seed:31,now:1700000000000}),b=S.newProfile({seed:32,now:1700000000000});
+ a.lessons.c01={done:true,sentence:'My private practice sentence.'};
+ const state={version:1,profiles:[a,b],active:a.id,seenBefore:false},before=JSON.stringify(state);
+ const result=S.personalExport(state,true);
+ assert.equal(result.profiles.length,1);assert.equal(result.profiles[0].id,a.id);
+ assert.equal(result.profiles[0].lessons.c01.sentence,'');
+ assert.equal(JSON.stringify(state),before);
+ assert.equal(S.personalExport(state).profiles[0].lessons.c01.sentence,'My private practice sentence.');
+ assert.equal(S.personalExport({...state,active:null}).profiles.length,0);
 });
 test('dictionary dedupes base entries, preserves edits, and keeps categories in sync',async()=>{
  const base=catalog.slice(0,700).map(e=>({w:e.word,m:e.meaning,k:e.kazakh,e:e.example,category:e.category}));

@@ -13,7 +13,7 @@ function setup(){
   const q=D.questions[index],options=D.shuffle(q.options);let selected=[],answered=false;
   box.replaceChildren();
   const el=(tag,cls,text)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(text)n.textContent=text;return n};
-  const top=el('div','daily-top');top.append(el('h2','',round?'One more situation':'Phrase of the day'),el('span','','REAL LIFE · '+(round+1)));
+  const top=el('div','daily-top');top.append(el('h2','',round?'One more situation':'Phrase of the day'),el('span','','QUESTION '+(round+1)+' · '+D.questions.length+' SITUATIONS'));
   const hint=el('div','daily-clue');hint.append(el('span','','Meaning to express'),el('p','',q.meaning));
   const kk=el('p','',q.kazakh);kk.lang='kk';hint.append(kk);
   const sentence=el('p','daily-gap',q.sentence);
