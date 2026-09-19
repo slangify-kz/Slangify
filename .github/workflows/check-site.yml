@@ -17,17 +17,3 @@ jobs:
       - uses: actions/checkout@v4
       - name: Check learning and player behavior
         run: node --test tests/*.test.cjs
-      - name: Inspect the public widget ad integration
-        shell: bash
-        run: |
-          curl --fail --location --silent --show-error --max-time 30 \
-            'https://youglish.com/public/emb/widget.js' -o /tmp/slangify-widget.js
-          node <<'NODE'
-          const fs=require('node:fs'),source=fs.readFileSync('/tmp/slangify-widget.js','utf8');
-          const patterns=[/setAdsLocation/g,/AdLocations/g,/fluently/gi,/createElement\("iframe"\)/g,/\.src=/g];
-          for(const pattern of patterns){
-            const matches=[...source.matchAll(pattern)].slice(0,4);
-            console.log('Pattern '+pattern+': '+matches.length);
-            for(const m of matches)console.log(source.slice(Math.max(0,m.index-130),m.index+230));
-          }
-          NODE

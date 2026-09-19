@@ -11,28 +11,46 @@ async function digest(text){
 function readState(){try{return JSON.parse(localStorage.getItem(STUDY_KEY)||'null')}catch{return null}}
 async function ownerProfile(state){
  if(!state?.profiles?.length)return null;
- for(const profile of state.profiles)if(await digest(profile?.id)===OWNER_HASH)return profile;
+ const profile=state.profiles.find(p=>p.id===state.active);
+ if(profile&&await digest(profile.id)===OWNER_HASH)return profile;
  return null;
 }
+let corePromise=null,activeOwner=null;
 function ensureStudyCore(){
  if(window.SlangStudy)return Promise.resolve(window.SlangStudy);
- return new Promise(resolve=>{
-  const found=document.querySelector('script[data-slangify-study-core]');
-  if(found){found.addEventListener('load',()=>resolve(window.SlangStudy||null),{once:true});found.addEventListener('error',()=>resolve(null),{once:true});return}
-  const script=document.createElement('script');script.src='study-core.js?v=20260917b';script.dataset.slangifyStudyCore='true';script.onload=()=>resolve(window.SlangStudy||null);script.onerror=()=>resolve(null);document.head.appendChild(script);
- });
+ if(corePromise)return corePromise;
+ const load=src=>new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src;s.onload=resolve;s.onerror=reject;document.head.append(s)});
+ corePromise=(async()=>{if(!window.SlangCourse)await load('course-data.js?v=20260919');await load('study-core.js?v=20260919');return window.SlangStudy})().catch(()=>null);
+ return corePromise;
 }
 function masterCore(state,profile){
  if(!window.SlangStudy?.words||!profile)return false;
  let changed=false;profile.lessons??={};
  for(const w of window.SlangStudy.words){
   const before=profile.lessons[w.id]||{};
-  const next={done:true,attempts:Math.max(1,Number(before.attempts)||0),best:Math.max(10,Number(before.best)||0),quickAttempts:Math.max(1,Number(before.quickAttempts)||0),quickBest:Math.max(6,Number(before.quickBest)||0),fullAttempts:Math.max(1,Number(before.fullAttempts)||0),fullBest:Math.max(10,Number(before.fullBest)||0),sentence:typeof before.sentence==='string'&&before.sentence?before.sentence:`Practice example with ${w.word}.`,context:['friends','school','formal','interview'].includes(before.context)?before.context:'friends'};
-  if(JSON.stringify(before)!==JSON.stringify(next)){profile.lessons[w.id]=next;changed=true}
+  if(!before.done){profile.lessons[w.id]={...before,done:true,manual:true};changed=true}
  }
- if(changed){profile.updated=Date.now();try{localStorage.setItem(STUDY_KEY,JSON.stringify(state))}catch{}}
+ if(changed){profile.updated=Date.now();profile.externalUse=true;try{localStorage.setItem(STUDY_KEY,JSON.stringify(state))}catch{return false}}
  return changed;
 }
+const normalize=s=>String(s||'').normalize('NFKC').trim().toLowerCase().replace(/’/g,"'");
+function active(){return !!activeOwner&&readState()?.active===activeOwner}
+function words(){return typeof allItems!=='undefined'?allItems:(window.SlangStudy?.words||[]).map(w=>({w:w.word,m:w.en,k:w.kk,e:w.example,p:'Core 30'}))}
+window.SlangOwnerProgress={active,known:word=>active()&&words().some(w=>normalize(w.w)===normalize(word)),collection:()=>active()?words().map(w=>({...w,learned:true,manual:true})):[]};
+function refreshBadges(){
+ const enabled=active();
+ document.querySelectorAll('.card').forEach(card=>{
+  const known=enabled&&window.SlangOwnerProgress.known(card.querySelector('.word-button')?.textContent);
+  let badge=card.querySelector('.known-badge');
+  if(known&&!badge){badge=document.createElement('span');badge.className='known-badge';badge.textContent='Learned ✓';card.append(badge)}
+  if(!known)badge?.remove();
+ });
+ let banner=document.getElementById('owner-progress-note');
+ if(enabled&&!banner){banner=document.createElement('p');banner.id='owner-progress-note';banner.className='owner-progress-note';document.querySelector('.search-tools')?.prepend(banner)}
+ if(banner){banner.hidden=!enabled;banner.textContent=words().length+' / '+words().length+' words marked as learned in your profile. Test scores stay separate.'}
+}
+document.addEventListener('slangify:dictionary-ready',refreshBadges);
+document.addEventListener('slangify:cards-rendered',refreshBadges);
 function hideAggregateTools(){
  document.documentElement.dataset.slangifyOwner='hidden-panel';
  const phrases=['compare learning modes','keep or combine your data','paired results','download csv','full backup','import a slangify','combine data','all participants','group comparison','research export'];
@@ -74,12 +92,23 @@ function renderPanel(dialog){
 function setupPanelTrigger(isOwner){
  if(!isOwner)return;const first=document.querySelector('.tagline'),second=document.querySelector('main#home h1,.hero h1');if(!first||!second)return;
  addPanelStyles();let dialog=document.getElementById('ownerResultsPanel');if(!dialog){dialog=document.createElement('dialog');dialog.id='ownerResultsPanel';dialog.className='owner-results';dialog.setAttribute('aria-label','Research results');document.body.appendChild(dialog)}
- let armed=false,timer=null;first.addEventListener('click',()=>{armed=true;clearTimeout(timer);timer=setTimeout(()=>armed=false,7000)});second.addEventListener('click',()=>{if(!armed)return;armed=false;clearTimeout(timer);renderPanel(dialog);if(!dialog.open)dialog.showModal()});dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close()});
+ let armed=false,timer=null;first.addEventListener('click',()=>{armed=true;clearTimeout(timer);timer=setTimeout(()=>armed=false,7000)});second.addEventListener('click',()=>{if(!armed||!active())return;armed=false;clearTimeout(timer);renderPanel(dialog);if(!dialog.open)dialog.showModal()});dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close()});
 }
+let request=0,panelReady=false;
 async function apply(){
- hideAggregateTools();await ensureStudyCore();const state=readState(),owner=await ownerProfile(state),isOwner=!!owner;
- if(isOwner){const changed=masterCore(state,owner);if(changed&&state.active===owner.id){const status=document.getElementById('studyStatus');if(status){status.textContent='Owner profile: all Core 30 words are marked completed.';status.classList.add('show');setTimeout(()=>status.classList.remove('show'),3500)}}}
- setupPanelTrigger(isOwner);
+ const attempt=++request;
+ await ensureStudyCore();
+ const state=readState(),owner=await ownerProfile(state);
+ if(attempt!==request)return;
+ activeOwner=owner?.id||null;
+ if(owner){
+  const changed=masterCore(state,owner);
+  if(changed)document.dispatchEvent(new CustomEvent('slangify:owner-progress-ready',{detail:{id:owner.id}}));
+  if(!panelReady){setupPanelTrigger(true);panelReady=true}
+ }
+ refreshBadges();
 }
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(apply,0),{once:true});else setTimeout(apply,0);
+document.addEventListener('slangify:session-changed',apply);
+window.addEventListener('storage',event=>{if(event.key===STUDY_KEY)apply()});
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',apply,{once:true});else apply();
 })();

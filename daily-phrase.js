@@ -1,81 +1,46 @@
 (()=>{
 'use strict';
-const DAILY_KEY='slangify.daily-phrase.v5';
-const norm=s=>String(s??'').trim().toLowerCase().replace(/[’']/g,"'");
-const escRx=s=>String(s).replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
-function dateKey(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
-function seedFrom(text){let h=2166136261>>>0;for(const ch of String(text)){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)>>>0}return h||1}
-function rng(seed){return()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296}}
-function shuffled(items,seed){const a=[...items],r=rng(seed);for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
-function adapt(entry){return {w:entry.word||entry.w,m:entry.meaning||entry.m||entry.en,k:entry.kazakh||entry.k||entry.kk,e:entry.example||entry.e||'',category:entry.category||entry.p||'Everyday English'}}
-function blankExample(item){
- const text=String(item.e||'').trim();if(!text)return '';
- const rx=new RegExp('(^|[^A-Za-z0-9])('+escRx(item.w)+')(?=$|[^A-Za-z0-9])','i');
- return rx.test(text)?text.replace(rx,(m,prefix)=>prefix+'_____'):'';
-}
-function uniquePool(){
- const source=(typeof allItems!=='undefined'&&Array.isArray(allItems)&&allItems.length?allItems:(window.SlangContent?.entries||[])).map(adapt);
- const out=[],seen=new Set();
- for(const item of source){const key=norm(item.w);if(!key||seen.has(key)||!item.m||!blankExample(item))continue;seen.add(key);out.push(item)}
- return out;
-}
-function distractors(item,pool,seed){
- const currentCategory=norm(item.category),same=pool.filter(other=>norm(other.w)!==norm(item.w)&&norm(other.category)!==currentCategory),rest=pool.filter(other=>norm(other.w)!==norm(item.w));
- const source=same.length>=3?same:rest;
- const picked=[],seen=new Set([norm(item.w)]);
- for(const other of shuffled(source,seed)){const key=norm(other.w);if(!key||seen.has(key))continue;seen.add(key);picked.push(other.w);if(picked.length===3)break}
- return picked;
-}
-function loadOwnerMode(){
- if(document.querySelector('script[src*="owner-mode.js"]'))return;
- const script=document.createElement('script');script.src='owner-mode.js?v=20260917e';script.dataset.slangifyOwnerMode='true';document.head.appendChild(script);
-}
+const D=window.SlangDaily;if(!D)return;
+const key='slangify.daily-phrase.v6';
+const dateKey=()=>new Date().toLocaleDateString('sv-SE');
 function setup(){
  const host=document.querySelector('.search-tools');if(!host)return;
- const pool=uniquePool();if(pool.length<4)return;
- const existing=document.querySelector('.daily-phrase');if(existing)existing.remove();
  const box=document.createElement('section');box.className='daily-phrase';box.setAttribute('aria-label','Daily slang practice');host.before(box);
- let day=dateKey(),baseSeed=seedFrom(day),index=baseSeed%pool.length,first=true,questionNo=1,used=new Set([index]);
- function nextIndex(){
-  if(used.size>=pool.length)used=new Set([index]);
-  const available=[];for(let i=0;i<pool.length;i++)if(!used.has(i))available.push(i);
-  const r=rng(baseSeed^seedFrom(String(questionNo)));const next=available[Math.floor(r()*available.length)];used.add(next);return next;
- }
+ let day=dateKey(),round=0,queue=[];
+ const dailyIndex=()=>[...day].reduce((n,c)=>(n*31+c.charCodeAt(0))>>>0,17)%D.questions.length;
+ let index=dailyIndex();
  function render(){
-  const item=pool[index],gap=blankExample(item),wrong=distractors(item,pool,baseSeed^seedFrom(item.w)^questionNo),options=shuffled([item.w,...wrong],baseSeed^seedFrom(item.w+'|options|'+questionNo));
+  const q=D.questions[index],options=D.shuffle(q.options);let selected=[],answered=false;
   box.replaceChildren();
-  const top=document.createElement('div');top.className='daily-top';
-  const heading=document.createElement('h2');heading.textContent=first?'Phrase of the day':'Daily practice';
-  const tag=document.createElement('span');tag.textContent=`QUESTION ${questionNo} · ${pool.length} IN BANK · 4 OPTIONS · 1 ANSWER`;top.append(heading,tag);
-  const situation=document.createElement('p');situation.className='daily-situation';situation.textContent='Choose the slang word or phrase that fits the blank.';
-  const sentence=document.createElement('p');sentence.className='daily-gap';sentence.textContent=gap;
-  const group=document.createElement('div');group.className='daily-options';group.setAttribute('role','group');group.setAttribute('aria-label','Choose the missing slang expression');
-  const feedback=document.createElement('p');feedback.className='daily-feedback';feedback.setAttribute('role','status');
-  const actions=document.createElement('div');actions.className='daily-actions';actions.hidden=true;
-  let answered=false;
-  function choose(answer,persist=true){
-   if(answered)return;answered=true;const correct=norm(answer)===norm(item.w);
-   group.querySelectorAll('button').forEach(b=>{b.disabled=true;b.setAttribute('aria-pressed',String(b.textContent===answer));if(norm(b.textContent)===norm(item.w))b.dataset.correct='true'});
-   sentence.textContent=gap.replace('_____',item.w);
-   feedback.textContent=(correct?'You got it. ':'The correct answer is '+item.w+'. ')+item.m+' · '+item.k;
-   actions.hidden=false;
-   if(first&&persist)try{localStorage.setItem(DAILY_KEY,JSON.stringify({day,word:item.w,answer}))}catch{}
+  const el=(tag,cls,text)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(text)n.textContent=text;return n};
+  const top=el('div','daily-top');top.append(el('h2','',round?'One more situation':'Phrase of the day'),el('span','','REAL LIFE · '+(round+1)));
+  const hint=el('div','daily-clue');hint.append(el('span','','Meaning to express'),el('p','',q.meaning));
+  const kk=el('p','',q.kazakh);kk.lang='kk';hint.append(kk);
+  const sentence=el('p','daily-gap',q.sentence);
+  const instruction=el('p','daily-situation',q.answers.length===1?'Choose 1 answer · Бір жауапты таңда':'Choose 2 answers · Екі жауапты таңда');instruction.id='daily-instruction';
+  const group=el('div','daily-options');group.setAttribute('role','group');group.setAttribute('aria-labelledby','daily-instruction');
+  const check=el('button','daily-check','Check answer');check.type='button';check.disabled=true;
+  const feedback=el('p','daily-feedback');feedback.setAttribute('role','status');
+  const actions=el('div','daily-actions');actions.hidden=true;
+  function paint(){group.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(selected.includes(b.textContent))));check.disabled=selected.length!==q.answers.length}
+  function finish(persist=true){
+   if(answered||selected.length!==q.answers.length)return;answered=true;
+   const correct=D.grade(q,selected);
+   group.querySelectorAll('button').forEach(b=>{b.disabled=true;if(q.answers.includes(b.textContent))b.dataset.correct='true';else if(selected.includes(b.textContent))b.dataset.wrong='true'});
+   sentence.textContent=q.answers.map(a=>q.sentence.replace('_____',a)).join(' / ');
+   feedback.textContent=(correct?'Correct! ':'Answer'+(q.answers.length===2?'s':'')+': '+q.answers.join(' + ')+'. ')+q.meaning+' · '+q.kazakh;
+   check.hidden=true;actions.hidden=false;
+   if(!round&&persist)try{localStorage.setItem(key,JSON.stringify({day,id:q.id,selected}))}catch{}
   }
-  options.forEach(option=>{const b=document.createElement('button');b.type='button';b.textContent=option;b.onclick=()=>choose(option);group.appendChild(b)});
-  const learn=document.createElement('button');learn.type='button';learn.textContent='Explore this word';learn.onclick=()=>window.SlangStudio?.open({w:item.w,m:item.m,k:item.k,e:item.e,p:item.category});
-  const next=document.createElement('button');next.type='button';next.textContent='Next question →';next.onclick=()=>{questionNo++;index=nextIndex();first=false;render();box.querySelector('.daily-options button')?.focus()};
-  actions.append(learn,next);box.append(top,situation,sentence,group,feedback,actions);
-  if(first)try{const saved=JSON.parse(localStorage.getItem(DAILY_KEY)||'null');if(saved?.day===day&&norm(saved.word)===norm(item.w)&&options.some(x=>norm(x)===norm(saved.answer)))choose(saved.answer,false)}catch{}
+  for(const option of options){const b=el('button','',option);b.type='button';b.setAttribute('aria-pressed','false');b.onclick=()=>{if(answered)return;if(q.answers.length===1)selected=[option];else if(selected.includes(option))selected=selected.filter(x=>x!==option);else if(selected.length<2)selected.push(option);else {feedback.textContent='Two selected. Tap one to change it.';return}feedback.textContent='';paint()};group.append(b)}
+  check.onclick=()=>finish();
+  for(const word of q.answers){const learn=el('button','','Explore '+word);learn.type='button';learn.onclick=()=>{const item=typeof allItems!=='undefined'?allItems.find(x=>x.w.toLowerCase()===word.toLowerCase()):null;window.SlangStudio?.open(item||{w:word,m:q.meaning,k:q.kazakh,e:q.sentence.replace('_____',word),p:'Everyday English'})};actions.append(learn)}
+  const next=el('button','','Next question →');next.type='button';next.onclick=()=>{if(!queue.length)queue=D.shuffle(D.questions.map((_,i)=>i).filter(i=>i!==index));index=queue.pop();round++;render();box.querySelector('.daily-options button').focus()};actions.append(next);
+  box.append(top,hint,sentence,instruction,group,check,feedback,actions);
+  if(!round)try{const saved=JSON.parse(localStorage.getItem(key)||'null');if(saved?.day===day&&saved.id===q.id&&Array.isArray(saved.selected)&&saved.selected.length===q.answers.length&&new Set(saved.selected).size===saved.selected.length&&saved.selected.every(x=>options.includes(x))){selected=saved.selected;paint();finish(false)}}catch{}
  }
  render();
- document.addEventListener('visibilitychange',()=>{if(document.hidden||dateKey()===day)return;day=dateKey();baseSeed=seedFrom(day);index=baseSeed%pool.length;first=true;questionNo=1;used=new Set([index]);render()});
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden&&dateKey()!==day){day=dateKey();round=0;queue=[];index=dailyIndex();render()}});
 }
-function startWhenReady(){
- let started=false;const start=()=>{if(started)return;const pool=uniquePool();if(pool.length<4)return;started=true;setup()};
- document.addEventListener('slangify:dictionary-ready',start,{once:true});
- Promise.resolve(window.SlangContent?.ready).then(()=>queueMicrotask(start));
- setTimeout(start,1200);
-}
-loadOwnerMode();
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',startWhenReady,{once:true});else startWhenReady();
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup,{once:true});else setup();
 })();

@@ -12,6 +12,11 @@
   try{const raw=localStorage.getItem(S.key);if(raw)state=S.parse(raw);localStorage.setItem('slangify.storage-check','1');localStorage.removeItem('slangify.storage-check')}
   catch{damaged=true;storageProblem('Saved progress could not be loaded. It has not been overwritten. Download your existing data below or use another browser. New work in this visit can be exported.');}
   const p=()=>state.profiles.find(x=>x.id===state.active), count=x=>Object.values(x?.lessons||{}).filter(l=>l.done).length;
+  let announcedSession=null;
+  document.addEventListener('slangify:owner-progress-ready',event=>{
+    if(damaged||quiz||testStage||state.active!==event.detail.id)return;
+    try{state=S.parse(localStorage.getItem(S.key));render()}catch{}
+  });
   let quiz=null,testStage=null,chosen=null,answered=false,questionMs=0,lastTick=performance.now(),lastInteraction=Date.now(),request=null;
   function save(){if(damaged)return false;if(p())p().updated=Date.now();try{localStorage.setItem(S.key,JSON.stringify(state));return true}catch{storageProblem('This browser cannot save progress. Keep this page open and export a backup before leaving.');return false}}
   let noticeTimer;
@@ -135,6 +140,7 @@
   });
   $('newSession').onclick=()=>{$('sessionDialog').close();newSession()};
   function render(){
+    if(announcedSession!==state.active){announcedSession=state.active;queueMicrotask(()=>document.dispatchEvent(new CustomEvent('slangify:session-changed')))}
     request?.abort();quiz=null;testStage=null;chosen=null;answered=false;document.body.classList.remove('assessment-active');sessionBar();const hash=location.hash.slice(1)||'learn',tab=hash.startsWith('word/')?'learn':hash==='enroll'?'tests':hash;
     document.querySelectorAll('[data-tab]').forEach(a=>{if(a.dataset.tab===tab)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
     if(hash.startsWith('test/')){const stage=hash.split('/')[1];if(!p()||S.gate(p(),stage)){checkpoints();return}startAssessment(stage)}else if(hash.startsWith('word/'))lesson(hash.split('/')[1]);else if(hash==='tests')checkpoints();else if(hash==='enroll')enrollment();else if(hash==='report')report();else if(hash==='method')method();else course();

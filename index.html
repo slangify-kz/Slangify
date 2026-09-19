@@ -693,6 +693,7 @@ function renderCards(list){
     fragment.appendChild(el);
   });
   cards.appendChild(fragment);
+  document.dispatchEvent(new CustomEvent('slangify:cards-rendered'));
 }
 
 function showCategory(scroll=false){
@@ -1037,14 +1038,16 @@ document.querySelectorAll('nav a').forEach(link=>link.addEventListener('click',(
 }));
 
 </script>
-<link rel="stylesheet" href="learning-upgrade.css?v=20260914c">
+<link rel="stylesheet" href="learning-upgrade.css?v=20260919a">
 <link rel="stylesheet" href="theme-upgrade.css?v=20260914d">
 <script src="content-model.js?v=20260914c"></script>
 <script src="content-store.js?v=20260914c"></script>
-<script src="dictionary-content.js?v=20260914c"></script>
-<script src="learning-upgrade.js?v=20260914d"></script>
-<link rel="stylesheet" href="calm-theme.css?v=20260914c">
-<script src="daily-phrase.js?v=20260917e"></script>
-<script src="owner-mode.js?v=20260917e"></script>
+<script src="dictionary-additions.js?v=20260919a"></script>
+<script src="dictionary-content.js?v=20260919a"></script>
+<script src="learning-upgrade.js?v=20260919a"></script>
+<link rel="stylesheet" href="calm-theme.css?v=20260919a">
+<script src="daily-data.js?v=20260919a"></script>
+<script src="daily-phrase.js?v=20260919a"></script>
+<script src="owner-mode.js?v=20260919a"></script>
 </body>
 </html>
