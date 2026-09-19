@@ -13,7 +13,7 @@ const rows=[
  ['info','For your information.','Ақпарат үшін.','_____, the lesson starts at nine.',['FYI'],['gg','idk','AFK']],
  ['relax','Relax; take it easy.','Демалу; босаңсу.','Let’s _____ at home after the exam.',['chill','kick back'],['cram','rage quit']],
  ['study','Study a lot in a short time before a test.','Тест алдында қысқа уақытта көп оқу.','I need to _____ for tomorrow’s exam.',['cram'],['ghost','repost','nerf']],
- ['easy','Something very easy.','Өте оңай нәрсе.','That first task was a _____.',['piece of cake'],['curveball','vibe killer','no-brainer']],
+ ['easy','Something very easy.','Өте оңай нәрсе.','That first task was a _____.',['piece of cake'],['curveball','vibe killer','heads-up']],
  ['warning','An advance warning.','Алдын ала ескерту.','Just a _____: practice starts earlier.',['heads-up'],['meme','noob','crush']],
  ['excellent','Do very well on a test.','Тестті өте жақсы тапсыру.','You’re going to _____ that test.',['ace'],['lag','ghost','repost']],
  ['together','Spend time together socially.','Бірге уақыт өткізу.','Want to _____ at the park?',['hang out'],['nerf','repost','zone out']],
