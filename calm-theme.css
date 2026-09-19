@@ -51,5 +51,4 @@ html[data-style] .progress-bar{background:var(--accent);box-shadow:none}
 [data-owner-step][role="button"],#owner-title-trigger[role="button"]{cursor:pointer}
 [data-owner-step]:focus-visible,#owner-title-trigger:focus-visible{outline:2px solid var(--accent);outline-offset:5px;border-radius:4px}
 .owner-results [hidden]{display:none!important}.owner-results-import{display:grid;gap:8px;margin:18px 0;font-size:13px}.owner-results-import input{max-width:100%}
-.owner-step-ready{outline:2px solid var(--accent);outline-offset:5px;border-radius:4px}
 .owner-results form{display:grid;gap:12px;margin:20px 0}.owner-results input[type="password"]{font:inherit;min-height:44px;padding:10px;border:1px solid var(--line);border-radius:8px;color:var(--ink);background:var(--surface)}.owner-results button{min-height:44px;font:inherit;cursor:pointer}

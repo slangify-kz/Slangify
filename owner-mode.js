@@ -15,8 +15,8 @@ async function ownerProfile(state){
  if(profile&&await digest(profile.id)===OWNER_HASH)return profile;
  return null;
 }
-let corePromise=null,activeOwner=null,verifiedResults=false;
-const canViewResults=()=>active()||verifiedResults;
+let corePromise=null,activeOwner=null,panelUnlocked=false;
+const canViewResults=()=>panelUnlocked;
 function ensureStudyCore(){
  if(window.SlangStudy)return Promise.resolve(window.SlangStudy);
  if(corePromise)return corePromise;
@@ -71,29 +71,8 @@ function combinedProfiles(){return window.SlangStudy.merge(readState()?.profiles
 function ownerDownload(name,text,type='application/json'){
  if(!canViewResults())return;const url=URL.createObjectURL(new Blob([text],{type})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);
 }
-function renderAccess(dialog){
- dialog.dataset.view='access';dialog.replaceChildren();
- const body=document.createElement('div');body.className='owner-results-body';
- const title=document.createElement('h2');title.textContent='Вход владельца';
- const note=document.createElement('p');note.textContent='Старый профиль владельца в этом браузере не распознан. Подтверди доступ через GitHub. Ключ не сохраняется и отправляется только GitHub.';
- const form=document.createElement('form'),label=document.createElement('label'),input=document.createElement('input');
- label.textContent='Ключ доступа GitHub';label.htmlFor='results-owner-key';
- input.id='results-owner-key';input.type='password';input.required=true;input.autocomplete='off';input.spellcheck=false;
- const submit=document.createElement('button');submit.type='submit';submit.textContent='Открыть результаты';
- const status=document.createElement('p');status.setAttribute('role','status');
- const close=document.createElement('button');close.type='button';close.textContent='Закрыть';close.onclick=()=>dialog.close();
- form.append(label,input,submit);body.append(title,note,form,status,close);dialog.append(body);
- form.onsubmit=async event=>{
-  event.preventDefault();if(submit.disabled)return;
-  const client=window.SlangEditorAPI?.createClient();if(!client){status.textContent='Не удалось загрузить проверку доступа. Обнови страницу.';return}
-  let value=input.value;input.value='';submit.disabled=true;status.textContent='Проверяю владельца…';
-  try{const pending=client.login(value);value='';await pending;verifiedResults=true;if(dialog.open)renderPanel(dialog)}
-  catch(error){status.textContent=error.message}
-  finally{value='';client.logout();submit.disabled=false}
- };
-}
 function renderPanel(dialog){
- if(!canViewResults()){renderAccess(dialog);return}
+ if(!canViewResults()){if(dialog.open)dialog.close();return}
  dialog.dataset.view='results';
  const study=window.SlangStudy;let profiles=[],archiveError='';try{profiles=combinedProfiles()}catch{archiveError='Saved results could not be read. They have not been overwritten.'}
  const research=profiles.filter(p=>p.research);
@@ -119,10 +98,11 @@ function renderPanel(dialog){
 function setupPanelTrigger(){
  const first=[...document.querySelectorAll('[data-owner-step="first"]')],second=document.getElementById('owner-title-trigger');if(!first.length||!second)return;
  addPanelStyles();let dialog=document.getElementById('ownerResultsPanel');if(!dialog){dialog=document.createElement('dialog');dialog.id='ownerResultsPanel';dialog.className='owner-results';dialog.setAttribute('aria-label','All participant results');document.body.appendChild(dialog)}
- let armed=false,timer=null;
+ let deadline=0,timer=null;
  const bind=(node,fn)=>{node.setAttribute('role','button');node.tabIndex=0;node.addEventListener('click',fn);node.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();fn()}})};
- first.forEach(node=>bind(node,()=>{armed=true;second.classList.add('owner-step-ready');second.title='Нажми здесь, чтобы открыть панель владельца';clearTimeout(timer);timer=setTimeout(()=>{armed=false;second.classList.remove('owner-step-ready')},15000)}));
- bind(second,async()=>{if(!armed)return;armed=false;second.classList.remove('owner-step-ready');clearTimeout(timer);if(!dialog.open)dialog.showModal();dialog.textContent='Загружаю панель…';const study=await ensureStudyCore();if(!dialog.open)return;if(!study){dialog.textContent='Не удалось загрузить панель. Закрой её клавишей Esc и обнови страницу.';return}renderPanel(dialog)});
+ first.forEach(node=>bind(node,()=>{deadline=Date.now()+5000;clearTimeout(timer);timer=setTimeout(()=>deadline=0,5000)}));
+ bind(second,async()=>{if(!deadline||Date.now()>=deadline)return;deadline=0;clearTimeout(timer);panelUnlocked=true;if(!dialog.open)dialog.showModal();dialog.textContent='Загружаю панель…';const study=await ensureStudyCore();if(!dialog.open||!panelUnlocked)return;if(!study){dialog.textContent='Не удалось загрузить панель. Закрой её клавишей Esc и обнови страницу.';return}renderPanel(dialog)});
+ dialog.addEventListener('close',()=>{panelUnlocked=false;deadline=0;clearTimeout(timer);dialog.replaceChildren()});
  dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close()});
 }
 let request=0,panelReady=false;
@@ -142,6 +122,6 @@ async function apply(){
 document.addEventListener('slangify:session-changed',apply);
 window.addEventListener('storage',event=>{if(event.key===STUDY_KEY)apply()});
 function start(){if(!panelReady){setupPanelTrigger();panelReady=true}return apply()}
-window.addEventListener('pagehide',()=>{verifiedResults=false});
+window.addEventListener('pagehide',()=>{panelUnlocked=false});
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();
