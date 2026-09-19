@@ -15,7 +15,8 @@ async function ownerProfile(state){
  if(profile&&await digest(profile.id)===OWNER_HASH)return profile;
  return null;
 }
-let corePromise=null,activeOwner=null;
+let corePromise=null,activeOwner=null,verifiedResults=false;
+const canViewResults=()=>active()||verifiedResults;
 function ensureStudyCore(){
  if(window.SlangStudy)return Promise.resolve(window.SlangStudy);
  if(corePromise)return corePromise;
@@ -68,10 +69,32 @@ const ARCHIVE_KEY='slangify.owner-results.v1';
 function archive(){const text=localStorage.getItem(ARCHIVE_KEY);return text?window.SlangStudy.parse(text).profiles:[]}
 function combinedProfiles(){return window.SlangStudy.merge(readState()?.profiles||[],archive()).profiles.filter(p=>!p.demo)}
 function ownerDownload(name,text,type='application/json'){
- if(!active())return;const url=URL.createObjectURL(new Blob([text],{type})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);
+ if(!canViewResults())return;const url=URL.createObjectURL(new Blob([text],{type})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);
+}
+function renderAccess(dialog){
+ dialog.dataset.view='access';dialog.replaceChildren();
+ const body=document.createElement('div');body.className='owner-results-body';
+ const title=document.createElement('h2');title.textContent='Вход владельца';
+ const note=document.createElement('p');note.textContent='Старый профиль владельца в этом браузере не распознан. Подтверди доступ через GitHub. Ключ не сохраняется и отправляется только GitHub.';
+ const form=document.createElement('form'),label=document.createElement('label'),input=document.createElement('input');
+ label.textContent='Ключ доступа GitHub';label.htmlFor='results-owner-key';
+ input.id='results-owner-key';input.type='password';input.required=true;input.autocomplete='off';input.spellcheck=false;
+ const submit=document.createElement('button');submit.type='submit';submit.textContent='Открыть результаты';
+ const status=document.createElement('p');status.setAttribute('role','status');
+ const close=document.createElement('button');close.type='button';close.textContent='Закрыть';close.onclick=()=>dialog.close();
+ form.append(label,input,submit);body.append(title,note,form,status,close);dialog.append(body);
+ form.onsubmit=async event=>{
+  event.preventDefault();if(submit.disabled)return;
+  const client=window.SlangEditorAPI?.createClient();if(!client){status.textContent='Не удалось загрузить проверку доступа. Обнови страницу.';return}
+  let value=input.value;input.value='';submit.disabled=true;status.textContent='Проверяю владельца…';
+  try{const pending=client.login(value);value='';await pending;verifiedResults=true;if(dialog.open)renderPanel(dialog)}
+  catch(error){status.textContent=error.message}
+  finally{value='';client.logout();submit.disabled=false}
+ };
 }
 function renderPanel(dialog){
- if(!active()){dialog.replaceChildren();if(dialog.open)dialog.close();return}
+ if(!canViewResults()){renderAccess(dialog);return}
+ dialog.dataset.view='results';
  const study=window.SlangStudy;let profiles=[],archiveError='';try{profiles=combinedProfiles()}catch{archiveError='Saved results could not be read. They have not been overwritten.'}
  const research=profiles.filter(p=>p.research);
  dialog.replaceChildren();
@@ -85,21 +108,21 @@ function renderPanel(dialog){
  if(!profiles.length){const tr=document.createElement('tr'),td=document.createElement('td');td.colSpan=10;td.textContent='No participant data is stored in this browser yet.';tr.appendChild(td);tbody.appendChild(tr)}table.appendChild(tbody);wrap.appendChild(table);body.appendChild(wrap);
  const importBox=document.createElement('label');importBox.className='owner-results-import';importBox.textContent='Import participant result files';const files=document.createElement('input');files.type='file';files.accept='.json,application/json';files.multiple=true;const feedback=document.createElement('p');feedback.setAttribute('role','status');importBox.append(files);body.append(importBox,feedback);
  files.onchange=async()=>{
-  if(!active())return;files.disabled=true;
+  if(!canViewResults())return;files.disabled=true;
   try{let next=archive();for(const file of files.files){if(file.size>4e6)throw Error('Each file must be smaller than 4 MB.');const incoming=study.parse(await file.text()).profiles.filter(p=>!p.demo);incoming.forEach(p=>Object.values(p.lessons||{}).forEach(l=>l.sentence=''));next=study.merge(next,incoming).profiles}
-   if(!active())throw Error('Reopen the owner panel to import results.');
+   if(!canViewResults())throw Error('Reopen the owner panel to import results.');
    study.merge(readState()?.profiles||[],next);localStorage.setItem(ARCHIVE_KEY,JSON.stringify({version:1,profiles:next,active:null,seenBefore:false}));renderPanel(dialog);dialog.querySelector('[role="status"]').textContent='Imported. Existing participant codes are not counted twice.';
   }catch(error){feedback.textContent=error.message;files.disabled=false}
  };
- const actions=document.createElement('div');actions.className='owner-results-actions';const refresh=document.createElement('button');refresh.type='button';refresh.textContent='Refresh';refresh.onclick=()=>renderPanel(dialog);actions.appendChild(refresh);const csv=document.createElement('button');csv.type='button';csv.textContent='Export research CSV';csv.onclick=()=>{if(active())ownerDownload('slangify-research-results.csv',study.csv(combinedProfiles()),'text/csv;charset=utf-8')};actions.appendChild(csv);body.appendChild(actions);dialog.append(head,body);
+ const actions=document.createElement('div');actions.className='owner-results-actions';const refresh=document.createElement('button');refresh.type='button';refresh.textContent='Refresh';refresh.onclick=()=>renderPanel(dialog);actions.appendChild(refresh);const csv=document.createElement('button');csv.type='button';csv.textContent='Export research CSV';csv.onclick=()=>{if(canViewResults())ownerDownload('slangify-research-results.csv',study.csv(combinedProfiles()),'text/csv;charset=utf-8')};actions.appendChild(csv);body.appendChild(actions);dialog.append(head,body);
 }
-function setupPanelTrigger(isOwner){
- if(!isOwner)return;const first=[...document.querySelectorAll('[data-owner-step="first"]')],second=document.getElementById('owner-title-trigger');if(!first.length||!second)return;
+function setupPanelTrigger(){
+ const first=[...document.querySelectorAll('[data-owner-step="first"]')],second=document.getElementById('owner-title-trigger');if(!first.length||!second)return;
  addPanelStyles();let dialog=document.getElementById('ownerResultsPanel');if(!dialog){dialog=document.createElement('dialog');dialog.id='ownerResultsPanel';dialog.className='owner-results';dialog.setAttribute('aria-label','All participant results');document.body.appendChild(dialog)}
  let armed=false,timer=null;
  const bind=(node,fn)=>{node.setAttribute('role','button');node.tabIndex=0;node.addEventListener('click',fn);node.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();fn()}})};
- first.forEach(node=>bind(node,()=>{if(!active())return;armed=true;clearTimeout(timer);timer=setTimeout(()=>armed=false,10000)}));
- bind(second,()=>{if(!armed||!active())return;armed=false;clearTimeout(timer);renderPanel(dialog);if(!dialog.open)dialog.showModal()});
+ first.forEach(node=>bind(node,()=>{armed=true;second.classList.add('owner-step-ready');second.title='Нажми здесь, чтобы открыть панель владельца';clearTimeout(timer);timer=setTimeout(()=>{armed=false;second.classList.remove('owner-step-ready')},15000)}));
+ bind(second,async()=>{if(!armed)return;armed=false;second.classList.remove('owner-step-ready');clearTimeout(timer);if(!dialog.open)dialog.showModal();dialog.textContent='Загружаю панель…';const study=await ensureStudyCore();if(!dialog.open)return;if(!study){dialog.textContent='Не удалось загрузить панель. Закрой её клавишей Esc и обнови страницу.';return}renderPanel(dialog)});
  dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close()});
 }
 let request=0,panelReady=false;
@@ -109,15 +132,16 @@ async function apply(){
  const state=readState(),owner=await ownerProfile(state);
  if(attempt!==request)return;
  activeOwner=owner?.id||null;
- if(!owner){const dialog=document.getElementById('ownerResultsPanel');if(dialog){if(dialog.open)dialog.close();dialog.replaceChildren()}}
+ if(!canViewResults()){const dialog=document.getElementById('ownerResultsPanel');if(dialog?.dataset.view==='results'){if(dialog.open)dialog.close();dialog.replaceChildren()}}
  if(owner){
   const changed=masterCore(state,owner);
   if(changed)document.dispatchEvent(new CustomEvent('slangify:owner-progress-ready',{detail:{id:owner.id}}));
-  if(!panelReady){setupPanelTrigger(true);panelReady=true}
  }
  refreshBadges();
 }
 document.addEventListener('slangify:session-changed',apply);
 window.addEventListener('storage',event=>{if(event.key===STUDY_KEY)apply()});
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',apply,{once:true});else apply();
+function start(){if(!panelReady){setupPanelTrigger();panelReady=true}return apply()}
+window.addEventListener('pagehide',()=>{verifiedResults=false});
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();
