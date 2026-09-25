@@ -51,7 +51,7 @@
     return shuffle([question(w,'meaning',0),question(w,'context',0),question(w,'neutral'),question(w,'gap'),question(w,'reverse',1),question(w,'example')]);
   }
   function newProfile({research=false,group='context',assignment='self-selected',seenBefore=false,shareAnonymous=false,now=Date.now(),seed=Math.floor(Math.random()*4294967295)}={}){
-    if(!['context','classic'].includes(group))throw Error('Unknown learning mode');
+    if(!['context','classic','mixed'].includes(group))throw Error('Unknown learning mode');
     const id='S-'+seed.toString(16).padStart(8,'0').toUpperCase()+'-'+now.toString(36).toUpperCase();
     return {id,seed,corpus:corpus.version,created:now,updated:now,research,group,assignment,seenBefore,shareAnonymous,externalUse:false,delayHours:72,lessons:{},tests:{},activeSeconds:0,aiChecks:0,survey:null,demo:false,demoScores:null};
   }
@@ -88,12 +88,12 @@
     out.percent=demoPercent===null?Math.round(out.correct/30*100):demoPercent;return out;
   }
   const mean=a=>a.length?a.reduce((s,n)=>s+n,0)/a.length:null;
-  function groups(profiles){return ['classic','context'].map(group=>{
+  function groups(profiles){return ['context','classic','mixed'].map(group=>{
     const all=profiles.filter(p=>p.research&&!p.demo&&p.group===group),paired=all.filter(p=>score(p,'pre')&&score(p,'post')),retained=paired.filter(p=>score(p,'delayed')&&p.tests.delayed.started>=due(p));
-    return {group,n:all.length,paired:paired.length,delayedN:retained.length,pre:mean(paired.map(p=>score(p,'pre').percent)),post:mean(paired.map(p=>score(p,'post').percent)),gain:mean(paired.map(p=>score(p,'post').percent-score(p,'pre').percent)),delayed:mean(retained.map(p=>score(p,'delayed').percent)),retentionChange:mean(retained.map(p=>score(p,'delayed').percent-score(p,'post').percent)),exposed:all.filter(p=>p.seenBefore||p.externalUse).length,aiChecks:all.reduce((s,p)=>s+p.aiChecks,0),enjoyment:mean(all.filter(p=>p.survey).map(p=>p.survey.enjoyment))};})}
+    return {group,n:all.length,paired:paired.length,delayedN:retained.length,pre:mean(paired.map(p=>score(p,'pre').percent)),post:mean(paired.map(p=>score(p,'post').percent)),gain:mean(paired.map(p=>score(p,'post').percent-score(p,'pre').percent)),delayed:mean(retained.map(p=>score(p,'delayed').percent)),retentionChange:mean(retained.map(p=>score(p,'delayed').percent-score(p,'post').percent)),activeHours:all.length?all.reduce((sum,p)=>sum+p.activeSeconds,0)/all.length/3600:null,exposed:all.filter(p=>p.seenBefore||p.externalUse).length,aiChecks:all.reduce((s,p)=>s+p.aiChecks,0),enjoyment:mean(all.filter(p=>p.survey).map(p=>p.survey.enjoyment))};})}
   const number=(v,min,max)=>typeof v==='number'&&Number.isFinite(v)&&v>=min&&v<=max;
   function cleanProfile(p){
-    if(!p||!/^S-[A-F0-9]{8}-[A-Z0-9]{1,16}$/.test(p.id)||p.corpus!==corpus.version||!Number.isInteger(p.seed)||!number(p.seed,0,4294967295)||!number(p.created,1,9e15)||!['context','classic'].includes(p.group)||!['self-selected','random','teacher'].includes(p.assignment)||typeof p.research!=='boolean'||p.delayHours!==72)throw Error('Unsupported or damaged session.');
+    if(!p||!/^S-[A-F0-9]{8}-[A-Z0-9]{1,16}$/.test(p.id)||p.corpus!==corpus.version||!Number.isInteger(p.seed)||!number(p.seed,0,4294967295)||!number(p.created,1,9e15)||!['context','classic','mixed'].includes(p.group)||!['self-selected','random','teacher'].includes(p.assignment)||typeof p.research!=='boolean'||p.delayHours!==72)throw Error('Unsupported or damaged session.');
     const c=newProfile({research:p.research,group:p.group,assignment:p.assignment,seenBefore:!!p.seenBefore,shareAnonymous:p.shareAnonymous===true,now:p.created,seed:p.seed});if(c.id!==p.id)throw Error('Session code does not match.');
     c.updated=number(p.updated,p.created,9e15)?p.updated:p.created;c.externalUse=!!p.externalUse;c.activeSeconds=number(p.activeSeconds,0,1e8)?p.activeSeconds:0;c.aiChecks=Number.isInteger(p.aiChecks)&&number(p.aiChecks,0,1e6)?p.aiChecks:0;
     c.earlyDelayedUnlocked=p.earlyDelayedUnlocked===true;
