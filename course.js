@@ -13,6 +13,7 @@
   catch{damaged=true;storageProblem('Saved progress could not be loaded. It has not been overwritten. Download your existing data below or use another browser. New work in this visit can be exported.');}
   const p=()=>state.profiles.find(x=>x.id===state.active), count=x=>Object.values(x?.lessons||{}).filter(l=>l.done).length;
   let announcedSession=null;
+  let delayedTaps={id:null,count:0,start:0};
   document.addEventListener('slangify:owner-progress-ready',event=>{
     if(damaged||quiz||testStage||state.active!==event.detail.id)return;
     try{state=S.parse(localStorage.getItem(S.key));render()}catch{}
@@ -86,7 +87,7 @@
   }
   function checkpoints(){
     if(!p()?.research){view.innerHTML=`<span class="eyebrow">BEFORE / AFTER / LATER</span><h1>See what stays.</h1><div class="panel"><p>A research session uses three 30-question tests. The course and everyday practice work without joining.</p><div class="actions">${button('enroll','Create a research session')}${button('learn','Back to learning','',true)}</div></div>`;return}
-    const x=p();view.innerHTML=`<span class="eyebrow">RESEARCH CHECKPOINTS</span><h1>Your learning timeline.</h1><p class="muted">10 questions on meaning, 10 on context, 10 on neutral equivalents. No answer explanations are shown until all three tests are finished.</p><div class="test-stages">${S.stages.map((s,i)=>{const n=S.score(x,s),reason=S.gate(x,s),started=x.tests[s],label=['Before learning','After the course','Three days later'][i];return `<article class="test-stage"><span class="tag">0${i+1}</span><h3>${label}</h3>${n?`<div class="result-number">${n.percent}%</div><p>${n.correct}/30 correct · ${new Date(started.completed).toLocaleDateString()}</p>`:`<p>${reason||'Ready. Allow about 10 minutes and answer on your own.'}${s==='delayed'&&S.due(x)?'<br>Opens: '+esc(new Date(S.due(x)).toLocaleString()):''}</p>${button('test',started?'Resume test':'Start test',`data-stage="${s}" ${reason?'disabled':''}`)}`}</article>`}).join('')}</div><div class="panel"><h3>${count(x)===30?'Course finished':'Course progress'}</h3><p>${count(x)} of 30 words completed.</p><div class="actions">${button('learn','Open course','',true)}${button('report','View results','',true)}</div></div>${x.tests.post?.completed?survey():''}${x.tests.delayed?.completed?reviewTests(x):''}`;
+    const x=p();view.innerHTML=`${x.earlyDelayedUnlocked?'<p class="notice">Early test enabled. Tests started before 72 hours are excluded from the 72-hour retention summary.</p>':''}<span class="eyebrow">RESEARCH CHECKPOINTS</span><h1>Your learning timeline.</h1><p class="muted">10 questions on meaning, 10 on context, 10 on neutral equivalents. No answer explanations are shown until all three tests are finished.</p><div class="test-stages">${S.stages.map((s,i)=>{const n=S.score(x,s),reason=S.gate(x,s),started=x.tests[s],label=['Before learning','After the course','Three days later'][i];return `<article class="test-stage"><span class="tag">0${i+1}</span><h3>${s==='delayed'?`<button type="button" data-action="unlockDelayed" style="font:inherit;color:inherit;background:none;border:0;padding:0;text-align:left;min-height:44px">${label}</button>`:label}</h3>${n?`<div class="result-number">${n.percent}%</div><p>${n.correct}/30 correct · ${new Date(started.completed).toLocaleDateString()}</p>`:`<p>${reason||'Ready. Allow about 10 minutes and answer on your own.'}${s==='delayed'&&S.due(x)?'<br>Opens: '+esc(new Date(S.due(x)).toLocaleString()):''}</p>${button('test',started?'Resume test':'Start test',`data-stage="${s}" ${reason?'disabled':''}`)}`}</article>`}).join('')}</div><div class="panel"><h3>${count(x)===30?'Course finished':'Course progress'}</h3><p>${count(x)} of 30 words completed.</p><div class="actions">${button('learn','Open course','',true)}${button('report','View results','',true)}</div></div>${x.tests.post?.completed?survey():''}${x.tests.delayed?.completed?reviewTests(x):''}`;
     if(x.demo)view.insertAdjacentHTML('afterbegin','<p class="notice"><b>DEMO STATISTICS</b> · These values are only for checking the interface and are excluded from research exports.</p>');
     wireSurvey();
   }
@@ -115,8 +116,21 @@
   function sessions(){const dialog=$('sessionDialog');$('sessionList').innerHTML=state.profiles.length?state.profiles.filter(x=>x.id===state.active||window.SlangOwnerProgress?.active()).map(x=>`<button class="session-choice" data-action="switch" data-id="${esc(x.id)}"><b>${esc(x.id)}</b><span>${x.demo?'Demo statistics':x.research?'Research':'Learning'} · ${esc(x.group)} · ${count(x)}/30 words · ${new Date(x.created).toLocaleDateString()}</span></button>`).join(''):'<p class="muted">No saved sessions yet.</p>';dialog.showModal()}
   document.addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(!b||b.disabled)return;const a=b.dataset.action;
     try{
+      if(a!=='unlockDelayed')delayedTaps={id:null,count:0,start:0};
       if(['learn','tests','report','method'].includes(a)){quiz=null;testStage=null;go(a);return}
-      if(a==='start')newSession();
+      if(a==='unlockDelayed'){
+        const x=p();if(!x?.research||x.tests.delayed?.completed)return;
+        if(!x.tests.post?.completed){notify('Complete the post-test first.');return}
+        const now=Date.now();
+        if(delayedTaps.id!==x.id||now-delayedTaps.start>5000)delayedTaps={id:x.id,count:0,start:now};
+        if(++delayedTaps.count<5)return;
+        delayedTaps={id:null,count:0,start:0};
+        const old=x.earlyDelayedUnlocked;x.earlyDelayedUnlocked=true;
+        if(!save()){x.earlyDelayedUnlocked=old;return}
+        const reason=S.gate(x,'delayed');if(reason){notify(reason);return}
+        notify('Early test unlocked. The actual timing will be recorded.');go('test/delayed');
+      }
+      else if(a==='start')newSession();
       else if(a==='enroll'){go('enroll')}
       else if(a==='lesson'){quiz=null;go('word/'+b.dataset.word)}
       else if(a==='practice')beginPractice(b.dataset.word,b.dataset.mode||'quick');
