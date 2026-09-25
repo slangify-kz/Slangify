@@ -31,7 +31,7 @@ function summarize(rows) {
       gain: paired.length >= 3 ? round(paired.reduce((n,r)=>n+r.post-r.pre,0)*100, paired.length*30) : null };
   };
   return { updated: new Date().toISOString(), cohortMinimum: 3,
-    groups: ['all','classic','context'].map(summary) };
+    groups: ['all','context','classic','mixed'].map(summary) };
 }
 export default {
   async fetch(request, env) {
@@ -54,7 +54,7 @@ export default {
     try { const body = await request.text(); if (body.length > 1000) throw Error(); data = JSON.parse(body); }
     catch { return send({ error:'Invalid JSON' }, 400); }
     if (!data || data.version !== APP_VERSION || !/^S-[A-F0-9]{8}-[A-Z0-9]{1,16}$/.test(data.sessionId)
-      || !['classic','context'].includes(data.group) || ![data.pre,data.post,data.delayed].every(validScore)
+      || !['classic','context','mixed'].includes(data.group) || ![data.pre,data.post,data.delayed].every(validScore)
       || typeof data.earlyDelayed !== 'boolean') return send({ error:'Invalid result' }, 400);
     if (data.post !== null && data.pre === null || data.delayed !== null && data.post === null)
       return send({ error:'Invalid test sequence' }, 400);
