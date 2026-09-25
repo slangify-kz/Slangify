@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS results (
   session_hash TEXT PRIMARY KEY,
   version TEXT NOT NULL,
-  study_group TEXT NOT NULL CHECK(study_group IN ('classic','context')),
+  study_group TEXT NOT NULL CHECK(study_group IN ('classic','context','mixed')),
   pre INTEGER CHECK(pre BETWEEN 0 AND 30),
   post INTEGER CHECK(post BETWEEN 0 AND 30),
   delayed INTEGER CHECK(delayed BETWEEN 0 AND 30),
