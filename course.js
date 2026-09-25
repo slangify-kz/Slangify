@@ -113,7 +113,7 @@
     catch(e){if($('aiFeedback'))$('aiFeedback').textContent=e.name==='AbortError'?'The check was interrupted. Your sentence is still saved.':e.message}
     finally{clearTimeout(timer);request=null;if(btn.isConnected)btn.disabled=false}
   }
-  function sessions(){const dialog=$('sessionDialog');$('sessionList').innerHTML=state.profiles.length?state.profiles.filter(x=>x.id===state.active||window.SlangOwnerProgress?.active()).map(x=>`<button class="session-choice" data-action="switch" data-id="${esc(x.id)}"><b>${esc(x.id)}</b><span>${x.demo?'Demo statistics':x.research?'Research':'Learning'} · ${esc(x.group)} · ${count(x)}/30 words · ${new Date(x.created).toLocaleDateString()}</span></button>`).join(''):'<p class="muted">No saved sessions yet.</p>';dialog.showModal()}
+  function sessions(){const dialog=$('sessionDialog');$('sessionList').innerHTML=state.profiles.length?state.profiles.map(x=>`<button class="session-choice" data-action="switch" data-id="${esc(x.id)}" ${x.id===state.active?'aria-current="true"':''}><b>${esc(x.id)}</b><span>${x.id===state.active?'Current · ':''}${x.demo?'Demo statistics':x.research?'Research':'Learning'} · ${esc(x.group)} · ${count(x)}/30 words · ${new Date(x.created).toLocaleDateString()}</span></button>`).join(''):'<p class="muted">No saved sessions yet.</p>';dialog.showModal()}
   document.addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(!b||b.disabled)return;const a=b.dataset.action;
     try{
       if(a!=='unlockDelayed')delayedTaps={id:null,count:0,start:0};
@@ -149,7 +149,7 @@
       else if(a==='pause'){const id=quiz?.id;quiz=null;testStage=null;document.body.classList.remove('assessment-active');save();go(id?'word/'+id:'tests');render()}
       else if(a==='ai')aiCheck(b);
       else if(a==='sessions')sessions();
-      else if(a==='switch'){if(b.dataset.id!==state.active&&!window.SlangOwnerProgress?.active())return;state.active=b.dataset.id;quiz=null;testStage=null;save();$('sessionDialog').close();go('learn');render()}
+      else if(a==='switch'){const selected=state.profiles.find(x=>x.id===b.dataset.id);if(!selected)return;const previous=state.active;state.active=selected.id;if(!save()){state.active=previous;return}$('sessionDialog').close();go('learn');render()}
       else if(a==='backup')download('slangify-my-backup.json',JSON.stringify(S.personalExport(state),null,2));
       else if(a==='transfer')download('slangify-my-results.json',JSON.stringify(S.personalExport(state,true),null,2));
       else if(a==='csv')download('slangify-my-results.csv',S.csv(S.personalExport(state).profiles),'text/csv;charset=utf-8');
