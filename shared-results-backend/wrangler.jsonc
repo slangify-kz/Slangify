@@ -1,0 +1,10 @@
+{
+  "name": "slangify-shared-results",
+  "main": "worker.mjs",
+  "compatibility_date": "2026-09-25",
+  "d1_databases": [{
+    "binding": "DB",
+    "database_name": "slangify-results",
+    "database_id": "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+  }]
+}
